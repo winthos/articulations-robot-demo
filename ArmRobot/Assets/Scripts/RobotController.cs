@@ -5,6 +5,8 @@ using UnityEngine;
 
 public class RobotController : MonoBehaviour
 {
+    public ArticulationBody myAB;
+
     [System.Serializable]
     public struct Joint
     {
@@ -13,6 +15,19 @@ public class RobotController : MonoBehaviour
     }
     public Joint[] joints;
 
+    void Start() 
+    {
+        myAB = this.GetComponent<ArticulationBody>();
+        //Debug.Log(myAB.linearLockX);
+    }
+
+    void Update()
+    {
+        // manual input
+        if(Input.GetKeyDown(KeyCode.Space)) {
+            this.GetComponent<ArticulationBody>().AddForce(new Vector3(0, 1000, 0));
+        }
+    }
 
     // CONTROL
 

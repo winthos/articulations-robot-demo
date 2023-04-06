@@ -2792,7 +2792,7 @@ Transform:
   m_Children:
   - {fileID: 1628272999}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &948141744
 GameObject:
@@ -5026,7 +5026,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1442213768
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7544,13 +7544,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2114954002}
-  m_LocalRotation: {x: -0.27383822, y: 0.00000047683716, z: -0.00000013411045, w: -0.96177584}
-  m_LocalPosition: {x: 0.044268016, y: 1.518, z: -1.1110927}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.034, y: 1.013, z: -1.491}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 5158835117634773012}
-  m_RootOrder: 7
-  m_LocalEulerAnglesHint: {x: 31.786, y: -90, z: 0}
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2127710631
 GameObject:
   m_ObjectHideFlags: 0
@@ -7830,6 +7830,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Launcher
+      objectReference: {fileID: 0}
+    - target: {fileID: 3144497964363635007, guid: 4960ac0a12b40c6439218b30707e2f0e,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4960ac0a12b40c6439218b30707e2f0e, type: 3}
@@ -10642,7 +10647,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!64 &5158835117634773009
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -10742,9 +10747,8 @@ Transform:
   - {fileID: 5158835115924667483}
   - {fileID: 5158835117605386508}
   - {fileID: 5158835117633502576}
-  - {fileID: 2114954005}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5158835117634773013
 MonoBehaviour:

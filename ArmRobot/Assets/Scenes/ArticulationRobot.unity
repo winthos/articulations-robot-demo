@@ -9050,7 +9050,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5158835116365451559
 Transform:
   m_ObjectHideFlags: 0
@@ -11065,7 +11065,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a547ca0656076248bc8544cdce6777f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  jointAxisType: 1
   liftState: 0
+  moveState: 0
   speed: 3
   myAB: {fileID: 0}
 --- !u!4 &5158835117633502576
@@ -11384,7 +11386,19 @@ MonoBehaviour:
     m_ActionId: 79a13c41-bd1c-4080-bfb7-7ea0d950760c
     m_ActionName: Player/MoveArm1[/Keyboard/m,/Keyboard/j]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5158835117634773016}
+        m_TargetAssemblyTypeName: TestABArmController, Assembly-CSharp
+        m_MethodName: OnMoveArmJoint1
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: bb66e4ee-14e9-4337-a9b1-1fe6eae472ce
     m_ActionName: Player/MoveArmJoint1[/Keyboard/m,/Keyboard/j]
   - m_PersistentCalls:
@@ -11468,6 +11482,8 @@ MonoBehaviour:
   joints:
   - nameOfRobotPart: Lift
     robotPart: {fileID: 5158835117633502543}
+  - nameOfRobotPart: Joint1
+    robotPart: {fileID: 5158835117675887873}
 --- !u!33 &5158835117675887842
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -11563,6 +11579,7 @@ GameObject:
   - component: {fileID: 5158835117675887869}
   - component: {fileID: 5158835117675887843}
   - component: {fileID: 5158835117675887872}
+  - component: {fileID: 5158835117675887873}
   m_Layer: 10
   m_Name: stretch_robot_arm_2
   m_TagString: Untagged
@@ -11611,8 +11628,8 @@ ArticulationBody:
   m_ZDrive:
     lowerLimit: 0
     upperLimit: 0.2
-    stiffness: 0
-    damping: 0
+    stiffness: 100000
+    damping: 9000
     forceLimit: 3.4028235e+38
     target: 0
     targetVelocity: 0
@@ -11622,3 +11639,20 @@ ArticulationBody:
   m_Immovable: 0
   m_UseGravity: 0
   m_CollisionDetectionMode: 0
+--- !u!114 &5158835117675887873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5158835117675887871}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a547ca0656076248bc8544cdce6777f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jointAxisType: 2
+  liftState: 0
+  moveState: 0
+  speed: 3
+  myAB: {fileID: 0}

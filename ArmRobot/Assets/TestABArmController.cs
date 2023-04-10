@@ -4,10 +4,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 //this tests controlling the arm parts moving with force
-
-//this enum can be used to determine the move state of any given arm joint
-public enum ArmMoveState {Fixed = 0, MovingForward = 1, MovingBackward = -1};
-
 public class TestABArmController : MonoBehaviour
 {
     // private ArticulationBody myAB;
@@ -28,8 +24,44 @@ public class TestABArmController : MonoBehaviour
         //myAB = GetComponent<ArticulationBody>();
     }
 
-    //set the arm state to actively moving forward, actively moving back, or fixed in place based on 2d axis input
-    //can be used generically for any arm joint
+    //callback that runs on loop when H or N keys are pressed to lift or lower arm rig
+    public void OnMoveArmLift(InputAction.CallbackContext context)
+    {
+        TestABArmJointController lift = joints[0].robotPart;
+        var input = context.ReadValue<float>();
+        //Debug.Log($"ArmMoveState input is: {input}");
+        lift.liftState = LiftStateFromInput(input);
+        Debug.Log($"Lift liftState set to {lift.liftState}");
+        //now pass the arm state to the arm joint controller here I guess inside this callback?
+        
+    }
+
+    //reads input from the H and N keys via Player Input to lift or lower the arm rig
+    ArmLiftState LiftStateFromInput (float input)
+    {
+        if (input > 0)
+        {
+            return ArmLiftState.MovingUp;
+        }
+        else if (input < 0)
+        {
+            return ArmLiftState.MovingDown;
+        }
+        else
+        {
+            return ArmLiftState.Fixed;
+        }
+    }
+
+    public void OnMoveArmJoint1(InputAction.CallbackContext context) 
+    {
+        TestABArmJointController joint1 = joints[1].robotPart;
+        var input = context.ReadValue<float>();
+        joint1.moveState = MoveStateFromInput(input);
+        Debug.Log($"Joint1 MoveState set to {joint1.moveState}");
+    }
+
+    //reads input from the J and M keys via Player Input to move first joint forward and back
     ArmMoveState MoveStateFromInput (float input)
     {
         if(input > 0)
@@ -47,37 +79,9 @@ public class TestABArmController : MonoBehaviour
         }
     }
 
-    ArmLiftState LiftStateFromInput (float input)
-    {
-        if (input > 0)
-        {
-            return ArmLiftState.MovingUp;
-        }
-        else if (input < 0)
-        {
-            return ArmLiftState.MovingDown;
-        }
-        else
-        {
-            return ArmLiftState.Fixed;
-        }
-    }
 
-    //move the first arm joint via inputs from J and M keys
-    public void OnMoveArmLift(InputAction.CallbackContext context)
-    {
-        TestABArmJointController lift = joints[0].robotPart;
-        var input = context.ReadValue<float>();
-        //Debug.Log($"ArmMoveState input is: {input}");
-        lift.liftState = LiftStateFromInput(input);
-        Debug.Log($"MoveState set to {lift.liftState}");
-        //now pass the arm state to the arm joint controller here I guess inside this callback?
-        
-    }
 
-    public void OnMoveArmJoint1() 
-    {
 
-    }
+
 
 }

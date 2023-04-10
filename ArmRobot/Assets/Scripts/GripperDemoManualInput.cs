@@ -6,7 +6,6 @@ public class GripperDemoManualInput : MonoBehaviour
 {
     public GameObject hand;
 
-
     void Update()
     {
         float input = Input.GetAxis("BigHandVertical");

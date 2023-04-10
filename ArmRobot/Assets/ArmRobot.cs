@@ -44,6 +44,51 @@ public partial class @ArmRobot : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""MoveArmLift"",
+                    ""type"": ""Button"",
+                    ""id"": ""79a13c41-bd1c-4080-bfb7-7ea0d950760c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MoveArmJoint1"",
+                    ""type"": ""Button"",
+                    ""id"": ""bb66e4ee-14e9-4337-a9b1-1fe6eae472ce"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MoveArmJoint2"",
+                    ""type"": ""Button"",
+                    ""id"": ""0a62c63c-a041-47e1-a9bd-d4ebadb9ae8c"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MoveArmJoint3"",
+                    ""type"": ""Button"",
+                    ""id"": ""d93f0fc4-400c-4056-9f1f-6ae85206a4cd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""MoveArmJoint4"",
+                    ""type"": ""Button"",
+                    ""id"": ""b4e402ea-97b2-4f38-b240-c034a55656ad"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -132,6 +177,171 @@ public partial class @ArmRobot : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Look"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Lift"",
+                    ""id"": ""42d3af34-5389-4d37-afb8-ee2aa517f560"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveArmLift"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Negative"",
+                    ""id"": ""12e9220d-0416-4965-b0f8-26ad3731f6c8"",
+                    ""path"": ""<Keyboard>/n"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveArmLift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Positive"",
+                    ""id"": ""687a3bc6-61e3-4f20-ad3f-05b2098a7542"",
+                    ""path"": ""<Keyboard>/h"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveArmLift"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Joint4"",
+                    ""id"": ""20a6806e-b17c-499d-bf1a-1fae1afe8fc5"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveArmJoint4"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Negative"",
+                    ""id"": ""12baae90-2f4a-4064-a908-3b350e21d717"",
+                    ""path"": ""<Keyboard>/slash"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveArmJoint4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Positive"",
+                    ""id"": ""794a58fd-e6b5-473a-80b2-f9fb54810ba8"",
+                    ""path"": ""<Keyboard>/semicolon"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveArmJoint4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Joint1"",
+                    ""id"": ""9e0c5cb3-6eee-42ee-8b9c-18e6e167e74a"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveArmJoint1"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Negative"",
+                    ""id"": ""170b1428-ed41-407b-adca-1db078de6833"",
+                    ""path"": ""<Keyboard>/m"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveArmJoint1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Positive"",
+                    ""id"": ""b2dc81b8-bf36-40af-afe1-ec4eb03cd5a2"",
+                    ""path"": ""<Keyboard>/j"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveArmJoint1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Joint2"",
+                    ""id"": ""e70c9721-f0b6-4379-9569-4491e816c638"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveArmJoint2"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Negative"",
+                    ""id"": ""d0d85050-75e0-4e31-86b5-6e9ca9a14074"",
+                    ""path"": ""<Keyboard>/comma"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveArmJoint2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Positive"",
+                    ""id"": ""03ed9339-4f27-4716-b9e3-4d6d8951e810"",
+                    ""path"": ""<Keyboard>/k"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveArmJoint2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Joint3"",
+                    ""id"": ""9129d608-b388-4324-81b8-7075236efcec"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveArmJoint3"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Negative"",
+                    ""id"": ""290276d2-c55f-43ee-8988-de0445a371e2"",
+                    ""path"": ""<Keyboard>/period"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveArmJoint3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Positive"",
+                    ""id"": ""31c80886-01d1-451b-bd57-2d8de29584ba"",
+                    ""path"": ""<Keyboard>/l"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""MoveArmJoint3"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 }
@@ -721,6 +931,11 @@ public partial class @ArmRobot : IInputActionCollection2, IDisposable
         m_Player = asset.FindActionMap("Player", throwIfNotFound: true);
         m_Player_Move = m_Player.FindAction("Move", throwIfNotFound: true);
         m_Player_Look = m_Player.FindAction("Look", throwIfNotFound: true);
+        m_Player_MoveArmLift = m_Player.FindAction("MoveArmLift", throwIfNotFound: true);
+        m_Player_MoveArmJoint1 = m_Player.FindAction("MoveArmJoint1", throwIfNotFound: true);
+        m_Player_MoveArmJoint2 = m_Player.FindAction("MoveArmJoint2", throwIfNotFound: true);
+        m_Player_MoveArmJoint3 = m_Player.FindAction("MoveArmJoint3", throwIfNotFound: true);
+        m_Player_MoveArmJoint4 = m_Player.FindAction("MoveArmJoint4", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -794,12 +1009,22 @@ public partial class @ArmRobot : IInputActionCollection2, IDisposable
     private IPlayerActions m_PlayerActionsCallbackInterface;
     private readonly InputAction m_Player_Move;
     private readonly InputAction m_Player_Look;
+    private readonly InputAction m_Player_MoveArmLift;
+    private readonly InputAction m_Player_MoveArmJoint1;
+    private readonly InputAction m_Player_MoveArmJoint2;
+    private readonly InputAction m_Player_MoveArmJoint3;
+    private readonly InputAction m_Player_MoveArmJoint4;
     public struct PlayerActions
     {
         private @ArmRobot m_Wrapper;
         public PlayerActions(@ArmRobot wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Player_Move;
         public InputAction @Look => m_Wrapper.m_Player_Look;
+        public InputAction @MoveArmLift => m_Wrapper.m_Player_MoveArmLift;
+        public InputAction @MoveArmJoint1 => m_Wrapper.m_Player_MoveArmJoint1;
+        public InputAction @MoveArmJoint2 => m_Wrapper.m_Player_MoveArmJoint2;
+        public InputAction @MoveArmJoint3 => m_Wrapper.m_Player_MoveArmJoint3;
+        public InputAction @MoveArmJoint4 => m_Wrapper.m_Player_MoveArmJoint4;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -815,6 +1040,21 @@ public partial class @ArmRobot : IInputActionCollection2, IDisposable
                 @Look.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
                 @Look.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
                 @Look.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnLook;
+                @MoveArmLift.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveArmLift;
+                @MoveArmLift.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveArmLift;
+                @MoveArmLift.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveArmLift;
+                @MoveArmJoint1.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveArmJoint1;
+                @MoveArmJoint1.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveArmJoint1;
+                @MoveArmJoint1.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveArmJoint1;
+                @MoveArmJoint2.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveArmJoint2;
+                @MoveArmJoint2.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveArmJoint2;
+                @MoveArmJoint2.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveArmJoint2;
+                @MoveArmJoint3.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveArmJoint3;
+                @MoveArmJoint3.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveArmJoint3;
+                @MoveArmJoint3.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveArmJoint3;
+                @MoveArmJoint4.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveArmJoint4;
+                @MoveArmJoint4.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveArmJoint4;
+                @MoveArmJoint4.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveArmJoint4;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -825,6 +1065,21 @@ public partial class @ArmRobot : IInputActionCollection2, IDisposable
                 @Look.started += instance.OnLook;
                 @Look.performed += instance.OnLook;
                 @Look.canceled += instance.OnLook;
+                @MoveArmLift.started += instance.OnMoveArmLift;
+                @MoveArmLift.performed += instance.OnMoveArmLift;
+                @MoveArmLift.canceled += instance.OnMoveArmLift;
+                @MoveArmJoint1.started += instance.OnMoveArmJoint1;
+                @MoveArmJoint1.performed += instance.OnMoveArmJoint1;
+                @MoveArmJoint1.canceled += instance.OnMoveArmJoint1;
+                @MoveArmJoint2.started += instance.OnMoveArmJoint2;
+                @MoveArmJoint2.performed += instance.OnMoveArmJoint2;
+                @MoveArmJoint2.canceled += instance.OnMoveArmJoint2;
+                @MoveArmJoint3.started += instance.OnMoveArmJoint3;
+                @MoveArmJoint3.performed += instance.OnMoveArmJoint3;
+                @MoveArmJoint3.canceled += instance.OnMoveArmJoint3;
+                @MoveArmJoint4.started += instance.OnMoveArmJoint4;
+                @MoveArmJoint4.performed += instance.OnMoveArmJoint4;
+                @MoveArmJoint4.canceled += instance.OnMoveArmJoint4;
             }
         }
     }
@@ -983,6 +1238,11 @@ public partial class @ArmRobot : IInputActionCollection2, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
+        void OnMoveArmLift(InputAction.CallbackContext context);
+        void OnMoveArmJoint1(InputAction.CallbackContext context);
+        void OnMoveArmJoint2(InputAction.CallbackContext context);
+        void OnMoveArmJoint3(InputAction.CallbackContext context);
+        void OnMoveArmJoint4(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

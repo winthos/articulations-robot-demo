@@ -2799,278 +2799,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 910806693}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &935050953
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 935050960}
-  - component: {fileID: 935050959}
-  - component: {fileID: 935050958}
-  - component: {fileID: 935050957}
-  - component: {fileID: 935050956}
-  - component: {fileID: 935050955}
-  - component: {fileID: 935050954}
-  m_Layer: 0
-  m_Name: StraightLineMaybe
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 0
---- !u!114 &935050954
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 935050953}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b25edf245505ce04d92f1597296a054d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ab: {fileID: 935050956}
-  moveSpeed: 180
-  rotateSpeed: 40
---- !u!114 &935050955
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 935050953}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 62899f850307741f2a39c98a8b639597, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Actions: {fileID: -944628639613478452, guid: 1bffd5123fae8004c817d18e1631fd40,
-    type: 3}
-  m_NotificationBehavior: 2
-  m_UIInputModule: {fileID: 0}
-  m_DeviceLostEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_DeviceRegainedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ControlsChangedEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  m_ActionEvents:
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 935050954}
-        m_TargetAssemblyTypeName: TestABController, Assembly-CSharp
-        m_MethodName: OnMove
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: 01c65a03-f2ed-49ea-b9b1-562acd784646
-    m_ActionName: Player/Move[/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow,/Corsair
-      0E00C01FAF6B11215E65CF62F5001C06/stick]
-  - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 935050954}
-        m_TargetAssemblyTypeName: TestABController, Assembly-CSharp
-        m_MethodName: OnLook
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
-    m_ActionId: ef0522e2-cc78-46ea-ac3e-2ac5011d542b
-    m_ActionName: Player/Look[/Mouse/delta]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 5540167d-214b-4280-99cc-fb062737567b
-    m_ActionName: UI/Navigate[/Corsair 0E00C01FAF6B11215E65CF62F5001C06/stick/up,/Corsair
-      0E00C01FAF6B11215E65CF62F5001C06/stick/down,/Corsair 0E00C01FAF6B11215E65CF62F5001C06/stick/left,/Corsair
-      0E00C01FAF6B11215E65CF62F5001C06/stick/right,/Keyboard/w,/Keyboard/upArrow,/Keyboard/s,/Keyboard/downArrow,/Keyboard/a,/Keyboard/leftArrow,/Keyboard/d,/Keyboard/rightArrow]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 7fe33825-e8a9-4d61-b4a4-c25781eafe52
-    m_ActionName: UI/Submit[/Keyboard/enter]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 2f6e1569-d87a-47a4-812a-45be10b27635
-    m_ActionName: UI/Cancel[/Keyboard/escape]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 08341586-b711-4f9b-8066-5b3c2799c3c3
-    m_ActionName: UI/Point[/Mouse/position]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 4e5b1e0f-7be5-495a-96bc-12fbcc84735d
-    m_ActionName: UI/Click[/Mouse/leftButton]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 583e1194-a3eb-4aa9-986d-39a89ad8dbb2
-    m_ActionName: UI/ScrollWheel[/Mouse/scroll]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: dfde9e33-b67d-4f0c-a8b9-07cf03123ab5
-    m_ActionName: UI/MiddleClick[/Mouse/middleButton]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: 40d93c46-8c6d-4cbc-a0bb-4673eee0d878
-    m_ActionName: UI/RightClick[/Mouse/rightButton]
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: fda90656-c2f1-4373-9075-d78a3684b2aa
-    m_ActionName: UI/TrackedDevicePosition
-  - m_PersistentCalls:
-      m_Calls: []
-    m_ActionId: ac99b567-2a17-4c8e-bc0a-9d6d07d71745
-    m_ActionName: UI/TrackedDeviceOrientation
-  m_NeverAutoSwitchControlSchemes: 0
-  m_DefaultControlScheme: Keyboard&Mouse
-  m_DefaultActionMap: Player
-  m_SplitScreenIndex: -1
-  m_Camera: {fileID: 0}
---- !u!171741748 &935050956
-ArticulationBody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 935050953}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Mass: 100
-  m_ParentAnchorPosition: {x: 0, y: 0, z: 0}
-  m_ParentAnchorRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_AnchorPosition: {x: 0, y: 0, z: 0}
-  m_AnchorRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_ComputeParentAnchor: 1
-  m_ArticulationJointType: 0
-  m_LinearX: 2
-  m_LinearY: 2
-  m_LinearZ: 2
-  m_SwingY: 2
-  m_SwingZ: 2
-  m_Twist: 2
-  m_XDrive:
-    lowerLimit: 0
-    upperLimit: 0
-    stiffness: 0
-    damping: 0
-    forceLimit: 3.4028235e+38
-    target: 0
-    targetVelocity: 0
-  m_YDrive:
-    lowerLimit: 0
-    upperLimit: 0
-    stiffness: 0
-    damping: 0
-    forceLimit: 3.4028235e+38
-    target: 0
-    targetVelocity: 0
-  m_ZDrive:
-    lowerLimit: 0
-    upperLimit: 0
-    stiffness: 0
-    damping: 0
-    forceLimit: 3.4028235e+38
-    target: 0
-    targetVelocity: 0
-  m_LinearDamping: 0.05
-  m_AngularDamping: 0.05
-  m_JointFriction: 0.05
-  m_Immovable: 0
-  m_UseGravity: 1
-  m_CollisionDetectionMode: 0
---- !u!65 &935050957
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 935050953}
-  m_Material: {fileID: 13400000, guid: 72b68d28ca8474d0e9642c0181f97f40, type: 2}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &935050958
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 935050953}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &935050959
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 935050953}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &935050960
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 935050953}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 2.92, y: 1.0973619, z: 5.5}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children:
-  - {fileID: 1628272999}
-  m_Father: {fileID: 0}
-  m_RootOrder: 6
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &936538373
 GameObject:
   m_ObjectHideFlags: 0
@@ -3127,7 +2855,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 8
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &948141744
 GameObject:
@@ -4156,7 +3884,7 @@ Transform:
   m_Children:
   - {fileID: 21006931}
   m_Father: {fileID: 0}
-  m_RootOrder: 7
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1171216877 stripped
 GameObject:
@@ -6211,154 +5939,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1620773422}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &1628272998
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1628272999}
-  - component: {fileID: 1628273003}
-  - component: {fileID: 1628273002}
-  - component: {fileID: 1628273001}
-  - component: {fileID: 1628273000}
-  m_Layer: 0
-  m_Name: Cube
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1628272999
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1628272998}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1.123, y: 0, z: 0.306}
-  m_LocalScale: {x: 1, y: 0.50862, z: 0.47488}
-  m_Children: []
-  m_Father: {fileID: 935050960}
-  m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!171741748 &1628273000
-ArticulationBody:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1628272998}
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Mass: 1
-  m_ParentAnchorPosition: {x: 1.1230001, y: 0, z: 0.30599976}
-  m_ParentAnchorRotation: {x: 0, y: 0, z: 0.70710677, w: 0.70710677}
-  m_AnchorPosition: {x: 0, y: 0, z: 0}
-  m_AnchorRotation: {x: 0, y: 0, z: 0.70710677, w: 0.70710677}
-  m_ComputeParentAnchor: 1
-  m_ArticulationJointType: 0
-  m_LinearX: 2
-  m_LinearY: 2
-  m_LinearZ: 2
-  m_SwingY: 2
-  m_SwingZ: 2
-  m_Twist: 2
-  m_XDrive:
-    lowerLimit: 0
-    upperLimit: 0
-    stiffness: 0
-    damping: 0
-    forceLimit: 3.4028235e+38
-    target: 0
-    targetVelocity: 0
-  m_YDrive:
-    lowerLimit: 0
-    upperLimit: 0
-    stiffness: 0
-    damping: 0
-    forceLimit: 3.4028235e+38
-    target: 0
-    targetVelocity: 0
-  m_ZDrive:
-    lowerLimit: 0
-    upperLimit: 0
-    stiffness: 0
-    damping: 0
-    forceLimit: 3.4028235e+38
-    target: 0
-    targetVelocity: 0
-  m_LinearDamping: 0.05
-  m_AngularDamping: 0.05
-  m_JointFriction: 0.05
-  m_Immovable: 0
-  m_UseGravity: 1
-  m_CollisionDetectionMode: 0
---- !u!65 &1628273001
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1628272998}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
---- !u!23 &1628273002
-MeshRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1628272998}
-  m_Enabled: 1
-  m_CastShadows: 1
-  m_ReceiveShadows: 1
-  m_DynamicOccludee: 1
-  m_MotionVectors: 1
-  m_LightProbeUsage: 1
-  m_ReflectionProbeUsage: 1
-  m_RayTracingMode: 2
-  m_RayTraceProcedural: 0
-  m_RenderingLayerMask: 1
-  m_RendererPriority: 0
-  m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
-  m_StaticBatchInfo:
-    firstSubMesh: 0
-    subMeshCount: 0
-  m_StaticBatchRoot: {fileID: 0}
-  m_ProbeAnchor: {fileID: 0}
-  m_LightProbeVolumeOverride: {fileID: 0}
-  m_ScaleInLightmap: 1
-  m_ReceiveGI: 1
-  m_PreserveUVs: 0
-  m_IgnoreNormalsForChartDetection: 0
-  m_ImportantGI: 0
-  m_StitchLightmapSeams: 1
-  m_SelectedEditorRenderState: 3
-  m_MinimumChartSize: 4
-  m_AutoUVMaxDistance: 0.5
-  m_AutoUVMaxAngle: 89
-  m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
-  m_SortingOrder: 0
-  m_AdditionalVertexStreams: {fileID: 0}
---- !u!33 &1628273003
-MeshFilter:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1628272998}
-  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!1 &1637158244
 GameObject:
   m_ObjectHideFlags: 0
@@ -6529,7 +6109,7 @@ Transform:
   - {fileID: 24091471}
   - {fileID: 165564803}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1674022706
 GameObject:
@@ -6774,7 +6354,7 @@ Transform:
   m_LocalScale: {x: 20, y: 1, z: 20}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1783092415
 PrefabInstance:
@@ -9044,13 +8624,14 @@ GameObject:
   - component: {fileID: 5158835116365451556}
   - component: {fileID: 5158835116365451562}
   - component: {fileID: 5158835116365451560}
+  - component: {fileID: 5158835116365451561}
   m_Layer: 10
   m_Name: stretch_robot_arm_3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5158835116365451559
 Transform:
   m_ObjectHideFlags: 0
@@ -9111,8 +8692,8 @@ ArticulationBody:
   m_ZDrive:
     lowerLimit: 0
     upperLimit: 0.2
-    stiffness: 0
-    damping: 0
+    stiffness: 100000
+    damping: 9000
     forceLimit: 3.4028235e+38
     target: 0
     targetVelocity: 0
@@ -9122,6 +8703,23 @@ ArticulationBody:
   m_Immovable: 0
   m_UseGravity: 0
   m_CollisionDetectionMode: 0
+--- !u!114 &5158835116365451561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5158835116365451558}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a547ca0656076248bc8544cdce6777f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jointAxisType: 2
+  liftState: 0
+  moveState: 0
+  speed: 3
+  myAB: {fileID: 0}
 --- !u!64 &5158835116365451562
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -9342,6 +8940,7 @@ GameObject:
   - component: {fileID: 5158835116607587606}
   - component: {fileID: 5158835116607587604}
   - component: {fileID: 5158835116607587602}
+  - component: {fileID: 5158835116607587603}
   m_Layer: 10
   m_Name: stretch_robot_arm_4
   m_TagString: Untagged
@@ -9409,8 +9008,8 @@ ArticulationBody:
   m_ZDrive:
     lowerLimit: 0
     upperLimit: 0.18
-    stiffness: 0
-    damping: 0
+    stiffness: 100000
+    damping: 9000
     forceLimit: 3.4028235e+38
     target: 0
     targetVelocity: 0
@@ -9420,6 +9019,23 @@ ArticulationBody:
   m_Immovable: 0
   m_UseGravity: 0
   m_CollisionDetectionMode: 0
+--- !u!114 &5158835116607587603
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5158835116607587600}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a547ca0656076248bc8544cdce6777f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jointAxisType: 2
+  liftState: 0
+  moveState: 0
+  speed: 3
+  myAB: {fileID: 0}
 --- !u!64 &5158835116607587604
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -9674,6 +9290,7 @@ GameObject:
   - component: {fileID: 5158835116785052166}
   - component: {fileID: 5158835116785052164}
   - component: {fileID: 5158835116785052162}
+  - component: {fileID: 5158835116785052163}
   m_Layer: 10
   m_Name: stretch_robot_arm_5
   m_TagString: Untagged
@@ -9712,9 +9329,9 @@ ArticulationBody:
   serializedVersion: 3
   m_Mass: 0.5
   m_ParentAnchorPosition: {x: 0.00000009313226, y: 0, z: 0.02170013}
-  m_ParentAnchorRotation: {x: 0, y: 0, z: 0, w: 1.0000002}
+  m_ParentAnchorRotation: {x: 0, y: 0, z: 0.70710695, w: 0.70710695}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
-  m_AnchorRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_AnchorRotation: {x: 0, y: 0, z: 0.70710677, w: 0.70710677}
   m_ComputeParentAnchor: 1
   m_ArticulationJointType: 1
   m_LinearX: 0
@@ -9742,8 +9359,8 @@ ArticulationBody:
   m_ZDrive:
     lowerLimit: 0
     upperLimit: 0.2
-    stiffness: 0
-    damping: 0
+    stiffness: 100000
+    damping: 9000
     forceLimit: 3.4028235e+38
     target: 0
     targetVelocity: 0
@@ -9753,6 +9370,23 @@ ArticulationBody:
   m_Immovable: 0
   m_UseGravity: 0
   m_CollisionDetectionMode: 0
+--- !u!114 &5158835116785052163
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5158835116785052160}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a547ca0656076248bc8544cdce6777f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jointAxisType: 2
+  liftState: 0
+  moveState: 0
+  speed: 3
+  myAB: {fileID: 0}
 --- !u!64 &5158835116785052164
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -11266,7 +10900,7 @@ Transform:
   - {fileID: 5158835117633502576}
   - {fileID: 2114954005}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5158835117634773013
 MonoBehaviour:
@@ -11402,15 +11036,51 @@ MonoBehaviour:
     m_ActionId: bb66e4ee-14e9-4337-a9b1-1fe6eae472ce
     m_ActionName: Player/MoveArmJoint1[/Keyboard/m,/Keyboard/j]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5158835117634773016}
+        m_TargetAssemblyTypeName: TestABArmController, Assembly-CSharp
+        m_MethodName: OnMoveArmJoint2
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: 0a62c63c-a041-47e1-a9bd-d4ebadb9ae8c
     m_ActionName: Player/MoveArmJoint2[/Keyboard/comma,/Keyboard/k]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5158835117634773016}
+        m_TargetAssemblyTypeName: TestABArmController, Assembly-CSharp
+        m_MethodName: OnMoveArmJoint3
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: d93f0fc4-400c-4056-9f1f-6ae85206a4cd
     m_ActionName: Player/MoveArmJoint3[/Keyboard/period,/Keyboard/l]
   - m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 5158835117634773016}
+        m_TargetAssemblyTypeName: TestABArmController, Assembly-CSharp
+        m_MethodName: OnMoveArmJoint4
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_ActionId: b4e402ea-97b2-4f38-b240-c034a55656ad
     m_ActionName: Player/MoveArmJoint4[/Keyboard/slash,/Keyboard/semicolon]
   m_NeverAutoSwitchControlSchemes: 0
@@ -11483,6 +11153,14 @@ MonoBehaviour:
   - nameOfRobotPart: Lift
     robotPart: {fileID: 5158835117633502543}
   - nameOfRobotPart: Joint1
+    robotPart: {fileID: 5158835117675887873}
+  - nameOfRobotPart: Joint2
+    robotPart: {fileID: 5158835116365451561}
+  - nameOfRobotPart: Joint3
+    robotPart: {fileID: 5158835116607587603}
+  - nameOfRobotPart: Joint4
+    robotPart: {fileID: 5158835116785052163}
+  - nameOfRobotPart: Joint5
     robotPart: {fileID: 5158835117675887873}
 --- !u!33 &5158835117675887842
 MeshFilter:

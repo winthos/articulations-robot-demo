@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -27,6 +28,9 @@ public class TestABArmController : MonoBehaviour
     //callback that runs on loop when H or N keys are pressed to lift or lower arm rig
     public void OnMoveArmLift(InputAction.CallbackContext context)
     {
+        if(joints[0].robotPart == null) {
+            throw new ArgumentException("Yo its null, please make not null");
+        }
         TestABArmJointController lift = joints[0].robotPart;
         var input = context.ReadValue<float>();
         //Debug.Log($"ArmMoveState input is: {input}");
@@ -55,13 +59,49 @@ public class TestABArmController : MonoBehaviour
 
     public void OnMoveArmJoint1(InputAction.CallbackContext context) 
     {
-        TestABArmJointController joint1 = joints[1].robotPart;
+        if(joints[1].robotPart == null) {
+            throw new ArgumentException("Yo its null, please make not null");
+        }
+        TestABArmJointController joint = joints[1].robotPart;
         var input = context.ReadValue<float>();
-        joint1.moveState = MoveStateFromInput(input);
-        Debug.Log($"Joint1 MoveState set to {joint1.moveState}");
+        joint.moveState = MoveStateFromInput(input);
+        Debug.Log($"Joint1 MoveState set to {joint.moveState}");
     }
 
-    //reads input from the J and M keys via Player Input to move first joint forward and back
+    public void OnMoveArmJoint2(InputAction.CallbackContext context) 
+    {
+        if(joints[2].robotPart == null) {
+            throw new ArgumentException("Yo its null, please make not null");
+        }
+        TestABArmJointController joint = joints[2].robotPart;
+        var input = context.ReadValue<float>();
+        joint.moveState = MoveStateFromInput(input);
+        Debug.Log($"Joint2 MoveState set to {joint.moveState}");
+    }
+
+    public void OnMoveArmJoint3(InputAction.CallbackContext context) 
+    {
+        if(joints[3].robotPart == null) {
+            throw new ArgumentException("Yo its null, please make not null");
+        }
+        TestABArmJointController joint = joints[3].robotPart;
+        var input = context.ReadValue<float>();
+        joint.moveState = MoveStateFromInput(input);
+        Debug.Log($"Joint3 MoveState set to {joint.moveState}");
+    }
+
+    public void OnMoveArmJoint4(InputAction.CallbackContext context) 
+    {
+        if(joints[4].robotPart == null) {
+            throw new ArgumentException("Yo its null, please make not null");
+        }
+        TestABArmJointController joint = joints[4].robotPart;
+        var input = context.ReadValue<float>();
+        joint.moveState = MoveStateFromInput(input);
+        Debug.Log($"Joint4 MoveState set to {joint.moveState}");
+    }
+
+    //reads input from the "JKL;" and "M,./" keys via Player Input to move first joint forward and back
     ArmMoveState MoveStateFromInput (float input)
     {
         if(input > 0)

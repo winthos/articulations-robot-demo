@@ -10414,6 +10414,7 @@ GameObject:
   - component: {fileID: 5158835117057418588}
   - component: {fileID: 5158835117057418562}
   - component: {fileID: 5158835117057418592}
+  - component: {fileID: 5158835117057418593}
   m_Layer: 10
   m_Name: stretch_robot_wrist_1
   m_TagString: Untagged
@@ -10490,6 +10491,21 @@ ArticulationBody:
   m_Immovable: 0
   m_UseGravity: 0
   m_CollisionDetectionMode: 0
+--- !u!114 &5158835117057418593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5158835117057418590}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a547ca0656076248bc8544cdce6777f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jointAxisType: 3
+  speed: 3
+  myAB: {fileID: 0}
 --- !u!1 &5158835117187801321
 GameObject:
   m_ObjectHideFlags: 0
@@ -11705,18 +11721,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   joints:
-  - nameOfRobotPart: Lift
-    robotPart: {fileID: 5158835117633502543}
-  - nameOfRobotPart: Joint1
-    robotPart: {fileID: 5158835117675887873}
-  - nameOfRobotPart: Joint2
-    robotPart: {fileID: 5158835116365451561}
-  - nameOfRobotPart: Joint3
-    robotPart: {fileID: 5158835116607587603}
-  - nameOfRobotPart: Joint4
-    robotPart: {fileID: 5158835116785052163}
-  - nameOfRobotPart: Joint5
-    robotPart: {fileID: 5158835117675887873}
+  - robotPart: {fileID: 5158835117633502543}
+  - robotPart: {fileID: 5158835117675887873}
+  - robotPart: {fileID: 5158835116365451561}
+  - robotPart: {fileID: 5158835116607587603}
+  - robotPart: {fileID: 5158835116785052163}
+  - robotPart: {fileID: 5158835117675887873}
+  - robotPart: {fileID: 5158835117057418593}
 --- !u!33 &5158835117675887842
 MeshFilter:
   m_ObjectHideFlags: 0

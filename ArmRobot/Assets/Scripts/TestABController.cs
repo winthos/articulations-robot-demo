@@ -14,7 +14,7 @@ public class TestABController : MonoBehaviour
     public void OnMove(InputAction.CallbackContext context) 
     {
         move = context.ReadValue<Vector2>();
-        Debug.Log($"OnMove input is: {move}");
+        //Debug.Log($"OnMove input is: {move}");
     }
 
     public void OnLook(InputAction.CallbackContext context)

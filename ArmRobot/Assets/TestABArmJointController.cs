@@ -2,25 +2,33 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum ArmLiftState { Fixed = 0, MovingDown = -1, MovingUp = 1 };
-public enum ArmExtendState {Fixed = 0, MovingBackward = -1, MovingForward = 1};
+public enum ArmLiftState { Idle = 0, MovingDown = -1, MovingUp = 1 };
+public enum ArmExtendState {Idle = 0, MovingBackward = -1, MovingForward = 1};
+public enum ArmRotateState {Idle = 0, RotatingRight = -1, RotatingLeft = 1}
+
 public enum JointAxisType {Unassigned, Extend, Lift, Rotate};
 public class TestABArmJointController : MonoBehaviour
 {
     public JointAxisType jointAxisType = JointAxisType.Unassigned;
 
 
-    private ArmLiftState liftState = ArmLiftState.Fixed;
+    private ArmLiftState liftState = ArmLiftState.Idle;
     public void SetArmLiftState(ArmLiftState armState)
     {
         liftState = armState;
     }
 
-    private ArmExtendState extendState = ArmExtendState.Fixed;
+    private ArmExtendState extendState = ArmExtendState.Idle;
     public void SetArmExtendState (ArmExtendState armState) 
     {
         extendState = armState;
     }
+
+    private ArmRotateState rotateState = ArmRotateState.Idle;
+    public void SetArmRotateState (ArmRotateState armState)
+    {
+        rotateState = armState;
+    } 
 
     public float speed = 1.0f;
     public ArticulationBody myAB;
@@ -35,7 +43,7 @@ public class TestABArmJointController : MonoBehaviour
     {
         //raise and lower along the Y axis
         if(jointAxisType == JointAxisType.Lift) {
-            if (liftState != ArmLiftState.Fixed)
+            if (liftState != ArmLiftState.Idle)
             {
                 //get jointPosition along y axis
                 float yDrivePostion = myAB.jointPosition[0];
@@ -53,7 +61,7 @@ public class TestABArmJointController : MonoBehaviour
 
         //extend and move forward along the Z axis
         else if(jointAxisType == JointAxisType.Extend) {
-            if(extendState != ArmExtendState.Fixed) 
+            if(extendState != ArmExtendState.Idle) 
             {
                 //get jointPosition along y axis
                 float zDrivePostion = myAB.jointPosition[0];

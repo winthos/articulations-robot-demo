@@ -14,7 +14,6 @@ public class TestABArmController : MonoBehaviour
     [System.Serializable]
     public struct Joint
     {
-        public string nameOfRobotPart;
         public TestABArmJointController robotPart;
     }
 
@@ -40,7 +39,7 @@ public class TestABArmController : MonoBehaviour
         
     }
 
-    //reads input from the H and N keys via Player Input to lift or lower the arm rig
+    //reads input from the Player Input component to move an arm joint up and down along its local Y axis
     ArmLiftState LiftStateFromInput (float input)
     {
         if (input > 0)
@@ -53,7 +52,7 @@ public class TestABArmController : MonoBehaviour
         }
         else
         {
-            return ArmLiftState.Fixed;
+            return ArmLiftState.Idle;
         }
     }
 
@@ -99,7 +98,8 @@ public class TestABArmController : MonoBehaviour
 
     }
 
-    //reads input from the "JKL;" and "M,./" keys via Player Input to move first joint forward and back
+
+    //reads input from Player Input component to extend and retract arm joint
     ArmExtendState ExtendStateFromInput (float input)
     {
         if(input > 0)
@@ -113,11 +113,37 @@ public class TestABArmController : MonoBehaviour
         }
         else
         {
-            return ArmExtendState.Fixed;
+            return ArmExtendState.Idle;
         }
     }
 
+    public void OnMoveArmWrist(InputAction.CallbackContext context)
+    {
+        if(joints[5].robotPart == null) {
+            throw new ArgumentException("Yo its null, please make not null");
+        }
+        TestABArmJointController joint = joints[5].robotPart;
+        var input = context.ReadValue<float>();
+        joint.SetArmRotateState(RotateStateFromInput(input));
+    }
 
+    //reads input from Player Input component to rotate arm joint
+    ArmRotateState RotateStateFromInput (float input)
+    {
+        if(input > 0)
+        {
+            return ArmRotateState.RotatingLeft;
+        }
+
+        else if (input < 0)
+        {
+            return ArmRotateState.RotatingRight;;
+        }
+        else
+        {
+            return ArmRotateState.Idle;
+        }
+    }
 
 
 

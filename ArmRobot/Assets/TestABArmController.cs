@@ -132,12 +132,12 @@ public class TestABArmController : MonoBehaviour
     {
         if(input > 0)
         {
-            return ArmRotateState.RotatingLeft;
+            return ArmRotateState.Positive;
         }
 
         else if (input < 0)
         {
-            return ArmRotateState.RotatingRight;;
+            return ArmRotateState.Negative;
         }
         else
         {

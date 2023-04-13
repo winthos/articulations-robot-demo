@@ -27,8 +27,6 @@ public class ArticulationJointController : MonoBehaviour
             float rotationGoal = CurrentPrimaryAxisRotation() + rotationChange;
             RotateTo(rotationGoal);
         }
-
-
     }
 
 

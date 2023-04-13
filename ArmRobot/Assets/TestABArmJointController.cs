@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum ArmLiftState { Idle = 0, MovingDown = -1, MovingUp = 1 };
 public enum ArmExtendState {Idle = 0, MovingBackward = -1, MovingForward = 1};
-public enum ArmRotateState {Idle = 0, RotatingRight = -1, RotatingLeft = 1}
+public enum ArmRotateState {Idle = 0, Negative = -1, Positive = 1}
 
 public enum JointAxisType {Unassigned, Extend, Lift, Rotate};
 public class TestABArmJointController : MonoBehaviour
@@ -42,7 +42,8 @@ public class TestABArmJointController : MonoBehaviour
     private void FixedUpdate()
     {
         //raise and lower along the Y axis
-        if(jointAxisType == JointAxisType.Lift) {
+        if(jointAxisType == JointAxisType.Lift) 
+        {
             if (liftState != ArmLiftState.Idle)
             {
                 //get jointPosition along y axis
@@ -60,7 +61,8 @@ public class TestABArmJointController : MonoBehaviour
         }
 
         //extend and move forward along the Z axis
-        else if(jointAxisType == JointAxisType.Extend) {
+        else if(jointAxisType == JointAxisType.Extend) 
+        {
             if(extendState != ArmExtendState.Idle) 
             {
                 //get jointPosition along y axis
@@ -78,5 +80,12 @@ public class TestABArmJointController : MonoBehaviour
         }
 
         //rotate about the Y axis
+        else if (jointAxisType == JointAxisType.Rotate) 
+        {
+            if(rotateState != ArmRotateState.Idle)
+            {
+
+            }
+        }
     }
 }

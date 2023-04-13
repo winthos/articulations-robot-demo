@@ -34,8 +34,8 @@ public class TestABArmController : MonoBehaviour
         TestABArmJointController lift = joints[0].robotPart;
         var input = context.ReadValue<float>();
         //Debug.Log($"ArmMoveState input is: {input}");
-        lift.liftState = LiftStateFromInput(input);
-        Debug.Log($"Lift liftState set to {lift.liftState}");
+        lift.SetArmLiftState(LiftStateFromInput(input));
+        //Debug.Log($"Lift liftState set to {lift.liftState}");
         //now pass the arm state to the arm joint controller here I guess inside this callback?
         
     }
@@ -64,8 +64,7 @@ public class TestABArmController : MonoBehaviour
         }
         TestABArmJointController joint = joints[1].robotPart;
         var input = context.ReadValue<float>();
-        joint.moveState = MoveStateFromInput(input);
-        Debug.Log($"Joint1 MoveState set to {joint.moveState}");
+        joint.SetArmExtendState(ExtendStateFromInput(input));
     }
 
     public void OnMoveArmJoint2(InputAction.CallbackContext context) 
@@ -75,8 +74,7 @@ public class TestABArmController : MonoBehaviour
         }
         TestABArmJointController joint = joints[2].robotPart;
         var input = context.ReadValue<float>();
-        joint.moveState = MoveStateFromInput(input);
-        Debug.Log($"Joint2 MoveState set to {joint.moveState}");
+        joint.SetArmExtendState(ExtendStateFromInput(input));
     }
 
     public void OnMoveArmJoint3(InputAction.CallbackContext context) 
@@ -86,8 +84,8 @@ public class TestABArmController : MonoBehaviour
         }
         TestABArmJointController joint = joints[3].robotPart;
         var input = context.ReadValue<float>();
-        joint.moveState = MoveStateFromInput(input);
-        Debug.Log($"Joint3 MoveState set to {joint.moveState}");
+        joint.SetArmExtendState(ExtendStateFromInput(input));
+
     }
 
     public void OnMoveArmJoint4(InputAction.CallbackContext context) 
@@ -97,25 +95,25 @@ public class TestABArmController : MonoBehaviour
         }
         TestABArmJointController joint = joints[4].robotPart;
         var input = context.ReadValue<float>();
-        joint.moveState = MoveStateFromInput(input);
-        Debug.Log($"Joint4 MoveState set to {joint.moveState}");
+        joint.SetArmExtendState(ExtendStateFromInput(input));
+
     }
 
     //reads input from the "JKL;" and "M,./" keys via Player Input to move first joint forward and back
-    ArmMoveState MoveStateFromInput (float input)
+    ArmExtendState ExtendStateFromInput (float input)
     {
         if(input > 0)
         {
-            return ArmMoveState.MovingForward;
+            return ArmExtendState.MovingForward;
         }
 
         else if (input < 0)
         {
-            return ArmMoveState.MovingBackward;
+            return ArmExtendState.MovingBackward;
         }
         else
         {
-            return ArmMoveState.Fixed;
+            return ArmExtendState.Fixed;
         }
     }
 

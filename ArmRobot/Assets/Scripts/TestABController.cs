@@ -10,6 +10,7 @@ public class TestABController : MonoBehaviour
     public float rotateSpeed;
     private Vector2 move;
     private float look;
+    ArticulationDrive articulationDrive;
 
     public void OnMove(InputAction.CallbackContext context) 
     {
@@ -20,6 +21,7 @@ public class TestABController : MonoBehaviour
     public void OnLook(InputAction.CallbackContext context)
     {
         look = context.ReadValue<float>();
+        Debug.Log(look);
     }
 
     private void FixedUpdate() 
@@ -41,11 +43,12 @@ public class TestABController : MonoBehaviour
         Vector3 targetvelocity = new Vector3(move.x, 0, move.y);
         targetvelocity *= moveSpeed;
 
-        //allign direction
+        //align direction
         targetvelocity = transform.TransformDirection(targetvelocity);
 
         //calculate forces
         Vector3 velocityChange = (targetvelocity - currentVelocity);
+
 
         ab.AddForce(velocityChange);
     }

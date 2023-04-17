@@ -9897,7 +9897,7 @@ ArticulationBody:
     upperLimit: 0.129
     stiffness: 100000
     damping: 9000
-    forceLimit: 1000
+    forceLimit: 50
     target: 0
     targetVelocity: 0
   m_LinearDamping: 0.05
@@ -10211,7 +10211,7 @@ ArticulationBody:
     upperLimit: 0.151
     stiffness: 100000
     damping: 9000
-    forceLimit: 1000
+    forceLimit: 50
     target: 0
     targetVelocity: 0
   m_LinearDamping: 0.05
@@ -10560,7 +10560,7 @@ ArticulationBody:
     upperLimit: 0.178
     stiffness: 100000
     damping: 9000
-    forceLimit: 1000
+    forceLimit: 50
     target: 0
     targetVelocity: 0
   m_LinearDamping: 0.05
@@ -12094,9 +12094,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b25edf245505ce04d92f1597296a054d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controlMode: 0
   ab: {fileID: 5158835117634773010}
-  moveSpeed: 380
-  rotateSpeed: 65
+  moveSpeed: 350
+  rotateSpeed: 60
 --- !u!4 &5158835117634773012
 Transform:
   m_ObjectHideFlags: 0
@@ -12367,6 +12368,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e89aca14150bd74eadd228319fd46ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  controlMode: 0
   joints:
   - robotPart: {fileID: 5158835117633502543}
   - robotPart: {fileID: 5158835117675887873}
@@ -12521,7 +12523,7 @@ ArticulationBody:
     upperLimit: 0.11
     stiffness: 100000
     damping: 9000
-    forceLimit: 1000
+    forceLimit: 50
     target: 0
     targetVelocity: 0
   m_LinearDamping: 0.05

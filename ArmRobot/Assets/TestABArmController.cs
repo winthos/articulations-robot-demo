@@ -5,11 +5,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 //this tests controlling the arm parts moving with force
+public enum ABControlMode {Keyboard_Input, Actions};
 public class TestABArmController : MonoBehaviour
 {
-    // private ArticulationBody myAB;
-    // public float moveSpeed;
-    // private float armTarget;
+    [SerializeField]
+    ABControlMode controlMode = ABControlMode.Keyboard_Input;
 
     [System.Serializable]
     public struct Joint
@@ -27,6 +27,11 @@ public class TestABArmController : MonoBehaviour
     //callback that runs on loop when H or N keys are pressed to lift or lower arm rig
     public void OnMoveArmLift(InputAction.CallbackContext context)
     {
+        if(controlMode != ABControlMode.Keyboard_Input) 
+        {
+            return;
+        }
+
         if(joints[0].robotPart == null) {
             throw new ArgumentException("Yo its null, please make not null");
         }
@@ -58,6 +63,11 @@ public class TestABArmController : MonoBehaviour
 
     public void OnMoveArmJoint1(InputAction.CallbackContext context) 
     {
+        if(controlMode != ABControlMode.Keyboard_Input) 
+        {
+            return;
+        }
+
         if(joints[1].robotPart == null) {
             throw new ArgumentException("Yo its null, please make not null");
         }
@@ -68,6 +78,11 @@ public class TestABArmController : MonoBehaviour
 
     public void OnMoveArmJoint2(InputAction.CallbackContext context) 
     {
+        if(controlMode != ABControlMode.Keyboard_Input) 
+        {
+            return;
+        }
+
         if(joints[2].robotPart == null) {
             throw new ArgumentException("Yo its null, please make not null");
         }
@@ -78,6 +93,11 @@ public class TestABArmController : MonoBehaviour
 
     public void OnMoveArmJoint3(InputAction.CallbackContext context) 
     {
+        if(controlMode != ABControlMode.Keyboard_Input) 
+        {
+            return;
+        }
+
         if(joints[3].robotPart == null) {
             throw new ArgumentException("Yo its null, please make not null");
         }
@@ -89,6 +109,11 @@ public class TestABArmController : MonoBehaviour
 
     public void OnMoveArmJoint4(InputAction.CallbackContext context) 
     {
+        if(controlMode != ABControlMode.Keyboard_Input) 
+        {
+            return;
+        }
+
         if(joints[4].robotPart == null) {
             throw new ArgumentException("Yo its null, please make not null");
         }
@@ -119,6 +144,11 @@ public class TestABArmController : MonoBehaviour
 
     public void OnMoveArmWrist(InputAction.CallbackContext context)
     {
+        if(controlMode != ABControlMode.Keyboard_Input) 
+        {
+            return;
+        }
+        
         if(joints[5].robotPart == null) {
             throw new ArgumentException("Yo its null, please make not null");
         }

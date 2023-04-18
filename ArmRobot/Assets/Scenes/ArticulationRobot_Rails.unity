@@ -12723,10 +12723,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b25edf245505ce04d92f1597296a054d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  forceTarget: {fileID: 0}
   controlMode: 0
   ab: {fileID: 5158835117634773010}
   moveSpeed: 350
   rotateSpeed: 60
+  MoveColliders: {fileID: 0}
+  RotateColliders: {fileID: 0}
+  moveState: 0
+  rotateState: 0
 --- !u!23 &5158835117634773014
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -12823,7 +12828,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5158835117634773013}
         m_TargetAssemblyTypeName: TestABController, Assembly-CSharp
-        m_MethodName: OnLook
+        m_MethodName: OnRotate
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

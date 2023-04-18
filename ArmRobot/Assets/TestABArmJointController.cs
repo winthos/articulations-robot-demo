@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum ArmLiftState { Idle = 0, MovingDown = -1, MovingUp = 1 };
 public enum ArmExtendState {Idle = 0, MovingBackward = -1, MovingForward = 1};
-public enum ArmRotateState {Idle = 0, Negative = -1, Positive = 1}
+public enum ArmRotateState {Idle = 0, Negative = -1, Positive = 1};
 
 public enum JointAxisType {Unassigned, Extend, Lift, Rotate};
 public class TestABArmJointController : MonoBehaviour

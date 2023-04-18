@@ -31,7 +31,7 @@ public partial class @ArmRobot : IInputActionCollection2, IDisposable
                     ""name"": ""Move"",
                     ""type"": ""Value"",
                     ""id"": ""01c65a03-f2ed-49ea-b9b1-562acd784646"",
-                    ""expectedControlType"": ""Vector2"",
+                    ""expectedControlType"": ""Axis"",
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
@@ -95,7 +95,7 @@ public partial class @ArmRobot : IInputActionCollection2, IDisposable
                 {
                     ""name"": ""WASD"",
                     ""id"": ""00ca640b-d935-4593-8157-c05846ea39b3"",
-                    ""path"": ""Dpad"",
+                    ""path"": ""1DAxis"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
@@ -104,7 +104,7 @@ public partial class @ArmRobot : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 },
                 {
-                    ""name"": ""up"",
+                    ""name"": ""positive"",
                     ""id"": ""e2062cb9-1b15-46a2-838c-2f8d72a0bdd9"",
                     ""path"": ""<Keyboard>/w"",
                     ""interactions"": """",
@@ -115,7 +115,7 @@ public partial class @ArmRobot : IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": true
                 },
                 {
-                    ""name"": ""down"",
+                    ""name"": ""negative"",
                     ""id"": ""320bffee-a40b-4347-ac70-c210eb8bc73a"",
                     ""path"": ""<Keyboard>/s"",
                     ""interactions"": """",

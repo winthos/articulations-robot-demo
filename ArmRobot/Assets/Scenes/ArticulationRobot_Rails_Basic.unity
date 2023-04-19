@@ -4347,7 +4347,7 @@ ArticulationBody:
   m_GameObject: {fileID: 911673263}
   m_Enabled: 1
   serializedVersion: 3
-  m_Mass: 30
+  m_Mass: 10
   m_ParentAnchorPosition: {x: -0.00726071, y: -0.33700007, z: -0.0000017928905}
   m_ParentAnchorRotation: {x: 0, y: -1, z: 0, w: 0.000000029802319}
   m_AnchorPosition: {x: 0, y: 0, z: 0}
@@ -6168,7 +6168,7 @@ GameObject:
   - component: {fileID: 1231467051}
   - component: {fileID: 1231467055}
   - component: {fileID: 1231467054}
-  - component: {fileID: 1231467056}
+  - component: {fileID: 1231467053}
   - component: {fileID: 1231467052}
   m_Layer: 0
   m_Name: stretch_robot_revolute_y
@@ -6247,6 +6247,20 @@ ArticulationBody:
   m_Immovable: 0
   m_UseGravity: 1
   m_CollisionDetectionMode: 0
+--- !u!64 &1231467053
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1231467050}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -5085101549903009002, guid: 4f0942852e444444e86e4d8807c3f73b, type: 3}
 --- !u!23 &1231467054
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -6296,19 +6310,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1231467050}
   m_Mesh: {fileID: -5085101549903009002, guid: 4f0942852e444444e86e4d8807c3f73b, type: 3}
---- !u!65 &1231467056
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1231467050}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &1281625504
 GameObject:
   m_ObjectHideFlags: 0
@@ -8139,6 +8140,10 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: b4e402ea-97b2-4f38-b240-c034a55656ad
     m_ActionName: Player/MoveArmJoint4[/Keyboard/slash,/Keyboard/semicolon]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 322e5131-f3ca-41ae-9d5e-f5911327a872
+    m_ActionName: Player/RotateWrist[/Keyboard/u,/Keyboard/i]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: Keyboard&Mouse
   m_DefaultActionMap: Player
@@ -12449,6 +12454,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 1
+  rotateState: 0
+  liftState: 0
+  extendState: 0
   speed: 3
   myAB: {fileID: 0}
 --- !u!64 &5158835116365451562
@@ -12763,6 +12771,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 1
+  rotateState: 0
+  liftState: 0
+  extendState: 0
   speed: 3
   myAB: {fileID: 0}
 --- !u!64 &5158835116607587604
@@ -13112,6 +13123,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 1
+  rotateState: 0
+  liftState: 0
+  extendState: 0
   speed: 3
   myAB: {fileID: 0}
 --- !u!64 &5158835116785052164
@@ -13674,6 +13688,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 3
+  rotateState: 0
+  liftState: 0
+  extendState: 0
   speed: 3
   myAB: {fileID: 0}
 --- !u!1 &5158835117187801321
@@ -14447,6 +14464,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 2
+  rotateState: 0
+  liftState: 0
+  extendState: 0
   speed: 3
   myAB: {fileID: 0}
 --- !u!4 &5158835117633502576
@@ -15083,5 +15103,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 1
+  rotateState: 0
+  liftState: 0
+  extendState: 0
   speed: 3
   myAB: {fileID: 0}

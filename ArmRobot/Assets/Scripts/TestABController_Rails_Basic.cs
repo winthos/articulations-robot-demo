@@ -13,14 +13,13 @@ public class TestABController_Rails_Basic : MonoBehaviour
 
     [Header("Reference to this Articulation Body")]
     public ArticulationBody ab;
+    public List<ArticulationBody> abChildren = new List<ArticulationBody>();
 
     [Header("Speed for movement and rotation")]
     public float moveSpeed;
     public float rotateSpeed;
     private float move;
     private float look;
-    private float newCOM;
-
     
     public void OnMove(InputAction.CallbackContext context) 
     {
@@ -73,8 +72,15 @@ public class TestABController_Rails_Basic : MonoBehaviour
             forcePosition = ab.worldCenterOfMass;
         }
         // Debug.Log("Applying force of " + velocityChange);
+
+        // change center of mass
         ab.centerOfMass = Vector3.zero;
-        Debug.Log("New center of mass is " + ab.centerOfMass);
+        foreach (ArticulationBody abChild in abChildren) {
+            abChild.centerOfMass = abChild.transform.InverseTransformPoint(ab.worldCenterOfMass);
+            Debug.Log(abChild.gameObject.name + "'s new centerOfMass is (" + abChild.centerOfMass.x + ", " + abChild.centerOfMass.y + ", " + abChild.centerOfMass.z + ")");
+        }
+
+        // Debug.Log("New center of mass is " + ab.centerOfMass);
         ab.AddForceAtPosition(velocityChange, forcePosition);
     }
 

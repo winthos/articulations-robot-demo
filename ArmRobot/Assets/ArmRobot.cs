@@ -89,6 +89,15 @@ public partial class @ArmRobot : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RotateWrist"",
+                    ""type"": ""Button"",
+                    ""id"": ""322e5131-f3ca-41ae-9d5e-f5911327a872"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -320,6 +329,39 @@ public partial class @ArmRobot : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""MoveArmJoint3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Wrist"",
+                    ""id"": ""fe5a56ad-d38c-492a-8325-b7249c383a47"",
+                    ""path"": ""1DAxis"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateWrist"",
+                    ""isComposite"": true,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": ""Negative"",
+                    ""id"": ""37ec06eb-ebdf-4c80-b208-c38aebb5475f"",
+                    ""path"": ""<Keyboard>/u"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateWrist"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": true
+                },
+                {
+                    ""name"": ""Positive"",
+                    ""id"": ""e3ed2c1b-3d50-41b4-bd35-0b36bde197db"",
+                    ""path"": ""<Keyboard>/i"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""RotateWrist"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": true
                 }
@@ -914,6 +956,7 @@ public partial class @ArmRobot : IInputActionCollection2, IDisposable
         m_Player_MoveArmJoint2 = m_Player.FindAction("MoveArmJoint2", throwIfNotFound: true);
         m_Player_MoveArmJoint3 = m_Player.FindAction("MoveArmJoint3", throwIfNotFound: true);
         m_Player_MoveArmJoint4 = m_Player.FindAction("MoveArmJoint4", throwIfNotFound: true);
+        m_Player_RotateWrist = m_Player.FindAction("RotateWrist", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -992,6 +1035,7 @@ public partial class @ArmRobot : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_MoveArmJoint2;
     private readonly InputAction m_Player_MoveArmJoint3;
     private readonly InputAction m_Player_MoveArmJoint4;
+    private readonly InputAction m_Player_RotateWrist;
     public struct PlayerActions
     {
         private @ArmRobot m_Wrapper;
@@ -1003,6 +1047,7 @@ public partial class @ArmRobot : IInputActionCollection2, IDisposable
         public InputAction @MoveArmJoint2 => m_Wrapper.m_Player_MoveArmJoint2;
         public InputAction @MoveArmJoint3 => m_Wrapper.m_Player_MoveArmJoint3;
         public InputAction @MoveArmJoint4 => m_Wrapper.m_Player_MoveArmJoint4;
+        public InputAction @RotateWrist => m_Wrapper.m_Player_RotateWrist;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -1033,6 +1078,9 @@ public partial class @ArmRobot : IInputActionCollection2, IDisposable
                 @MoveArmJoint4.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveArmJoint4;
                 @MoveArmJoint4.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveArmJoint4;
                 @MoveArmJoint4.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnMoveArmJoint4;
+                @RotateWrist.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotateWrist;
+                @RotateWrist.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotateWrist;
+                @RotateWrist.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRotateWrist;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -1058,6 +1106,9 @@ public partial class @ArmRobot : IInputActionCollection2, IDisposable
                 @MoveArmJoint4.started += instance.OnMoveArmJoint4;
                 @MoveArmJoint4.performed += instance.OnMoveArmJoint4;
                 @MoveArmJoint4.canceled += instance.OnMoveArmJoint4;
+                @RotateWrist.started += instance.OnRotateWrist;
+                @RotateWrist.performed += instance.OnRotateWrist;
+                @RotateWrist.canceled += instance.OnRotateWrist;
             }
         }
     }
@@ -1221,6 +1272,7 @@ public partial class @ArmRobot : IInputActionCollection2, IDisposable
         void OnMoveArmJoint2(InputAction.CallbackContext context);
         void OnMoveArmJoint3(InputAction.CallbackContext context);
         void OnMoveArmJoint4(InputAction.CallbackContext context);
+        void OnRotateWrist(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

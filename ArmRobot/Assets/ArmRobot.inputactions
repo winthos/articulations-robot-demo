@@ -67,6 +67,15 @@
                     "processors": "",
                     "interactions": "",
                     "initialStateCheck": false
+                },
+                {
+                    "name": "RotateWrist",
+                    "type": "Button",
+                    "id": "322e5131-f3ca-41ae-9d5e-f5911327a872",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
                 }
             ],
             "bindings": [
@@ -298,6 +307,39 @@
                     "processors": "",
                     "groups": "",
                     "action": "MoveArmJoint3",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Wrist",
+                    "id": "fe5a56ad-d38c-492a-8325-b7249c383a47",
+                    "path": "1DAxis",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateWrist",
+                    "isComposite": true,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "Negative",
+                    "id": "37ec06eb-ebdf-4c80-b208-c38aebb5475f",
+                    "path": "<Keyboard>/u",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateWrist",
+                    "isComposite": false,
+                    "isPartOfComposite": true
+                },
+                {
+                    "name": "Positive",
+                    "id": "e3ed2c1b-3d50-41b4-bd35-0b36bde197db",
+                    "path": "<Keyboard>/i",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "RotateWrist",
                     "isComposite": false,
                     "isPartOfComposite": true
                 }

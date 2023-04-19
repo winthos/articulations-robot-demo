@@ -118,6 +118,64 @@ public class TestABController : MonoBehaviour
         Move();
         Rotate();
     }
+
+    private void Update()
+    {
+        // if(Input.GetKeyDown(KeyCode.Space))
+        // {
+        //     StartCoroutine(MoveDistanceForward(1.0f));
+        // }
+    }
+
+    //this is wrong, i'm using kinematic equations assuming constant acceleration which I don't think is right actually
+    private IEnumerator MoveDistanceForward(float distance)
+    {
+        float currentTime = 0f;
+
+        //ok try to move forward <distance>
+        //use distance = ((v0 + vf)/2) * (time)
+
+        //grab target final velocity based on move speed
+        Vector3 targetVelocity = new Vector3(0, 0, 1);
+        targetVelocity *= moveSpeed;
+
+        Debug.Log($"target velocity: {targetVelocity}");
+        
+        float timeNeeded = ((2*distance)/(targetVelocity.z));
+        Debug.Log($"time needed: {timeNeeded}");
+
+        while (currentTime < timeNeeded)
+        {
+            Debug.Log(currentTime);
+
+            //now apply force of given velocity change over this amount of time???
+            Vector3 forcePosition = new Vector3();
+            forcePosition = forceTarget.transform.position;
+            GameObject targetObject = null;
+            targetObject = forceTarget;
+
+            //align direction
+            targetVelocity = targetObject.transform.TransformDirection(targetVelocity);
+
+            if(applyActionNoise && targetObject != null)
+            {
+                float dirRandom = Random.Range(-movementGaussian, movementGaussian);
+                targetObject.transform.Rotate(0, dirRandom, 0);
+            }
+
+            Vector3 currentVelocity = ab.velocity;
+            Vector3 velocityChange = (targetVelocity - currentVelocity);
+
+
+            ab.AddForceAtPosition(velocityChange, forcePosition);
+
+            currentTime += Time.smoothDeltaTime;
+            yield return null;
+        }
+
+        yield return null;
+    }
+
     void Move()
     {
         if(rotateState == RotateState.Idle && moveState != MoveState.Idle)
@@ -151,10 +209,11 @@ public class TestABController : MonoBehaviour
             targetvelocity *= moveSpeed;
 
             //allign direction
-            targetvelocity = forceTarget.transform.TransformDirection(targetvelocity);
+            targetvelocity = targetObject.transform.TransformDirection(targetvelocity);
 
             //calculate forces
             Vector3 velocityChange = (targetvelocity - currentVelocity);
+            Debug.Log(velocityChange);
 
             ab.AddForceAtPosition(velocityChange, forcePosition);
         }

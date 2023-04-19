@@ -10,9 +10,9 @@ public enum JointAxisType {Unassigned, Extend, Lift, Rotate};
 public class TestABArmJointController : MonoBehaviour
 {
     public JointAxisType jointAxisType = JointAxisType.Unassigned;
-
-
+    private ArmRotateState rotateState = ArmRotateState.Idle;
     private ArmLiftState liftState = ArmLiftState.Idle;
+
     public void SetArmLiftState(ArmLiftState armState)
     {
         liftState = armState;
@@ -24,7 +24,6 @@ public class TestABArmJointController : MonoBehaviour
         extendState = armState;
     }
 
-    private ArmRotateState rotateState = ArmRotateState.Idle;
     public void SetArmRotateState (ArmRotateState armState)
     {
         rotateState = armState;
@@ -84,8 +83,29 @@ public class TestABArmJointController : MonoBehaviour
         {
             if(rotateState != ArmRotateState.Idle)
             {
-
+                //note the {speed} for rotation seems to need to scale due to it being in radians/rotational degrees
+                //so at least for testing at the moment the "speed" value of the wrist is really high
+                float rotationChange = (float)rotateState * speed * Time.fixedDeltaTime;
+                float rotationGoal = CurrentPrimaryAxisRotation() + rotationChange;
+                RotateTo(rotationGoal);
             }
         }
+    }
+
+    // MOVEMENT HELPERS for rotate
+
+    //get current rotation value in degrees
+    float CurrentPrimaryAxisRotation()
+    {
+        float currentRotationRads = myAB.jointPosition[0];
+        float currentRotation = Mathf.Rad2Deg * currentRotationRads;
+        return currentRotation;
+    }
+
+    void RotateTo(float primaryAxisRotation)
+    {
+        var drive = myAB.xDrive;
+        drive.target = primaryAxisRotation;
+        myAB.xDrive = drive;
     }
 }

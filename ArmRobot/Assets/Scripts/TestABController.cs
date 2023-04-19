@@ -213,7 +213,7 @@ public class TestABController : MonoBehaviour
 
             //calculate forces
             Vector3 velocityChange = (targetvelocity - currentVelocity);
-            Debug.Log(velocityChange);
+            Debug.Log(Time.fixedDeltaTime);
 
             ab.AddForceAtPosition(velocityChange, forcePosition);
         }

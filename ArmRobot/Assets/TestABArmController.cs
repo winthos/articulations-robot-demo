@@ -9,7 +9,7 @@ public enum ABControlMode {Keyboard_Input, Actions};
 public class TestABArmController : MonoBehaviour
 {
     [SerializeField]
-    ABControlMode controlMode = ABControlMode.Keyboard_Input;
+    public ABControlMode controlMode = ABControlMode.Keyboard_Input;
 
     [System.Serializable]
     public struct Joint
@@ -22,6 +22,10 @@ public class TestABArmController : MonoBehaviour
     void Start()
     {
         //myAB = GetComponent<ArticulationBody>();
+        foreach (Joint j in joints)
+        {
+            j.robotPart.GetComponent<TestABArmJointController>().myABArmControllerComponent = this.GetComponent<TestABArmController>();
+        }
     }
 
     //callback that runs on loop when H or N keys are pressed to lift or lower arm rig

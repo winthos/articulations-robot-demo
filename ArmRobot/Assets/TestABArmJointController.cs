@@ -10,15 +10,15 @@ public enum JointAxisType {Unassigned, Extend, Lift, Rotate};
 public class TestABArmJointController : MonoBehaviour
 {
     public JointAxisType jointAxisType = JointAxisType.Unassigned;
-    private ArmRotateState rotateState = ArmRotateState.Idle;
-    private ArmLiftState liftState = ArmLiftState.Idle;
+    public ArmRotateState rotateState = ArmRotateState.Idle;
+    public ArmLiftState liftState = ArmLiftState.Idle;
+    public ArmExtendState extendState = ArmExtendState.Idle;
 
     public void SetArmLiftState(ArmLiftState armState)
     {
         liftState = armState;
     }
 
-    private ArmExtendState extendState = ArmExtendState.Idle;
     public void SetArmExtendState (ArmExtendState armState) 
     {
         extendState = armState;

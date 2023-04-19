@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using RandomExtensions;
 
 public enum MoveState {Idle = 0, Backward = -1, Forward = 1};
 
@@ -9,7 +10,15 @@ public enum RotateState {Idle = 0, Negative = -1, Positive = 1};
 
 public class TestABController : MonoBehaviour
 {
+    //use this to set global random object
+    protected static System.Random systemRandom = new System.Random();
+
     public GameObject forceTarget = null;
+    public GameObject forceTargetBack = null;
+
+    public bool applyActionNoise = false;
+    public float movementGaussian = 0.1f;
+    public float rotateGaussian = 0.1f;
 
     [SerializeField]
     [Header("Control with Keyboard or Action")]
@@ -22,7 +31,7 @@ public class TestABController : MonoBehaviour
     public float moveSpeed;
     public float rotateSpeed;
     private float move;
-    private float look;
+    private float rotate;
 
     [Header("Colliders used when moving or rotating")]
     public GameObject MoveColliders;
@@ -32,6 +41,11 @@ public class TestABController : MonoBehaviour
     public MoveState moveState = MoveState.Idle;
     public RotateState rotateState = RotateState.Idle;
     
+    public void Start()
+    {
+        //print(ab.centerOfMass);
+    }
+
     public void OnMove(InputAction.CallbackContext context) 
     {
         if(controlMode != ABControlMode.Keyboard_Input) 
@@ -71,8 +85,8 @@ public class TestABController : MonoBehaviour
             return;
         }
 
-        look = context.ReadValue<float>();
-        SetRotateState(RotateStateFromInput(look));
+        rotate = context.ReadValue<float>();
+        SetRotateState(RotateStateFromInput(rotate));
     }
 
     private void SetRotateState(RotateState state)
@@ -98,6 +112,8 @@ public class TestABController : MonoBehaviour
 
     private void FixedUpdate() 
     {
+        //print(ab.centerOfMass);
+
         UpdateCollidersForMovement();
         Move();
         Rotate();
@@ -106,28 +122,39 @@ public class TestABController : MonoBehaviour
     {
         if(rotateState == RotateState.Idle && moveState != MoveState.Idle)
         {
+            Vector3 forcePosition = new Vector3();
+
+            //prep to apply noise to forward direction if flagged to do so
+            GameObject targetObject = null;
+            if(moveState == MoveState.Forward)
+            {
+                forcePosition = forceTarget.transform.position;
+                targetObject = forceTarget;
+            }
+
+            else if(moveState == MoveState.Backward)
+            {
+                forcePosition = forceTargetBack.transform.position;
+                targetObject = forceTargetBack;
+            }
+            
+            if(applyActionNoise && targetObject != null)
+            {
+                float dirRandom = Random.Range(-movementGaussian, movementGaussian);
+                targetObject.transform.Rotate(0, dirRandom, 0);
+            }
+
             //find target velocity
             Vector3 currentVelocity = ab.velocity;
+
             Vector3 targetvelocity = new Vector3(0, 0, move);
             targetvelocity *= moveSpeed;
 
             //allign direction
-            targetvelocity = transform.TransformDirection(targetvelocity);
+            targetvelocity = forceTarget.transform.TransformDirection(targetvelocity);
 
             //calculate forces
             Vector3 velocityChange = (targetvelocity - currentVelocity);
-
-            //ab.AddForce(velocityChange);
-            Vector3 forcePosition = new Vector3();
-            if(forceTarget != null)
-            {
-                forcePosition = forceTarget.transform.position;
-            }
-
-            else
-            {
-                forcePosition = ab.transform.position;
-            }
 
             ab.AddForceAtPosition(velocityChange, forcePosition);
         }
@@ -137,8 +164,26 @@ public class TestABController : MonoBehaviour
     {
         if(rotateState != RotateState.Idle && moveState == MoveState.Idle)
         {
-            //note 2021 unity adds a forceMode paramater to AddTorque so uhhhh
-            ab.AddTorque(Vector3.up * look * rotateSpeed);
+            float rotateAmount;
+
+            if(applyActionNoise)
+            {
+                float rotRandom = Random.Range(-rotateGaussian, rotateGaussian);
+                rotateAmount = rotate + rotRandom;
+            }
+
+            else
+            {
+                rotateAmount = rotate;
+            }
+
+            //Debug.Log(rotateAmount);
+
+            if(rotateState != RotateState.Idle && moveState == MoveState.Idle)
+            {
+                //note 2021 unity adds a forceMode paramater to AddTorque so uhhhh
+                ab.AddTorque(Vector3.up * rotateAmount * rotateSpeed);
+            }
         }
     }
 

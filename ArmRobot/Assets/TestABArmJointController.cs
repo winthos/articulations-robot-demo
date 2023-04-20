@@ -6,12 +6,24 @@ public enum ArmLiftState { Idle = 0, MovingDown = -1, MovingUp = 1 };
 public enum ArmExtendState {Idle = 0, MovingBackward = -1, MovingForward = 1};
 public enum ArmRotateState {Idle = 0, Negative = -1, Positive = 1};
 public enum JointAxisType {Unassigned, Extend, Lift, Rotate};
+
+public class ArmMoveParams
+{
+    public float distance;
+    public float speed;
+    public float timeTakenSoFar;
+    public float totalTimeNeededToReachDistanceAtSomeSpeed;
+    public float totalNumberOfTimeSteps;
+    public float distanceToChangeWithEachTimeStep;
+}
+
 public class TestABArmJointController : MonoBehaviour
 {
     public JointAxisType jointAxisType = JointAxisType.Unassigned;
     public ArmRotateState rotateState = ArmRotateState.Idle;
     public ArmLiftState liftState = ArmLiftState.Idle;
     public ArmExtendState extendState = ArmExtendState.Idle;
+    public ArmMoveParams currentArmMoveParams;
 
     public void SetArmLiftState(ArmLiftState armState)
     {
@@ -31,6 +43,7 @@ public class TestABArmJointController : MonoBehaviour
     public float speed = 1.0f;
     public ArticulationBody myAB;
     public TestABArmController myABArmControllerComponent;
+
     void Start() 
     {
         myAB = this.GetComponent<ArticulationBody>();
@@ -45,6 +58,7 @@ public class TestABArmJointController : MonoBehaviour
         // }
     }
 
+    //this straight up isn't working right yet uhhhhhhhh
     //set drive targets via distance for action based input instead of held button input
     private IEnumerator ExtendToDistance(float distance, float speed)
     {
@@ -142,19 +156,42 @@ public class TestABArmJointController : MonoBehaviour
 
     private void ControlJointFromAction()
     {
+        if (currentArmMoveParams.timeTakenSoFar < currentArmMoveParams.totalTimeNeededToReachDistanceAtSomeSpeed)
+        {
+            Debug.Log($"time taken moving so far: {currentArmMoveParams.timeTakenSoFar}");
+            float yDrivePosition = myAB.jointPosition[0];
+            float targetPosition = yDrivePosition + currentArmMoveParams.distanceToChangeWithEachTimeStep;
 
+            var drive = myAB.yDrive;
+            drive.target = targetPosition;
+            myAB.yDrive = drive;
+
+            currentArmMoveParams.timeTakenSoFar += Time.deltaTime;
+        }
+
+        else
+        {
+            //we have finished moving to the target position so set arm to idle and stop moving
+            SetArmLiftState(ArmLiftState.Idle);
+        }
     }
 
     private void FixedUpdate()
-    {
+    { 
+        //keyboard input
         if(myABArmControllerComponent.controlMode == ABControlMode.Keyboard_Input)
         {
             ControlJointFromKeyboardInput();
         }
 
+        //action input, pass in direction, speed, etc
         else if(myABArmControllerComponent.controlMode == ABControlMode.Actions)
         {
-            ControlJointFromAction();
+            if(liftState != ArmLiftState.Idle)
+            {
+                //Debug.Log("try to move arm lift up with action");
+                ControlJointFromAction();
+            }
         }
     }
 

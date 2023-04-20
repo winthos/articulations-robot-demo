@@ -28,6 +28,41 @@ public class TestABArmController : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))
+        {
+            ActionMoveArmLiftUp(1.0f, 1.0f);
+        }
+    }
+
+    public void ActionMoveArmLiftUp(float distance, float speed)
+    {
+        if(controlMode != ABControlMode.Actions)
+        {
+            return;
+        }
+
+        TestABArmJointController lift = joints[0].robotPart;
+
+        //pre calculate all the things we need for physics
+        var totalTimeNeededToReachDistanceAtSomeSpeed = distance/speed;
+        var totalNumberOfTimeSteps = totalTimeNeededToReachDistanceAtSomeSpeed / Time.fixedDeltaTime;
+        var distanceToChangeWithEachTimeStep = distance/totalNumberOfTimeSteps;
+
+        lift.currentArmMoveParams = new ArmMoveParams()
+        {
+            distance = distance,
+            speed = speed,
+            timeTakenSoFar = 0.0f,
+            totalTimeNeededToReachDistanceAtSomeSpeed = totalTimeNeededToReachDistanceAtSomeSpeed,
+            totalNumberOfTimeSteps = totalNumberOfTimeSteps,
+            distanceToChangeWithEachTimeStep = distanceToChangeWithEachTimeStep
+        };
+
+        lift.SetArmLiftState(ArmLiftState.MovingUp);
+    }
+
     //callback that runs on loop when H or N keys are pressed to lift or lower arm rig
     public void OnMoveArmLift(InputAction.CallbackContext context)
     {

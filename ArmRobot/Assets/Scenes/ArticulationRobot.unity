@@ -10185,7 +10185,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &5158835116365451559
 Transform:
   m_ObjectHideFlags: 0
@@ -10270,8 +10270,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 1
+  rotateState: 0
+  liftState: 0
+  extendState: 0
   speed: 3
   myAB: {fileID: 0}
+  myABArmControllerComponent: {fileID: 0}
 --- !u!64 &5158835116365451562
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -10584,8 +10588,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 1
+  rotateState: 0
+  liftState: 0
+  extendState: 0
   speed: 3
   myAB: {fileID: 0}
+  myABArmControllerComponent: {fileID: 0}
 --- !u!64 &5158835116607587604
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -10933,8 +10941,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 1
+  rotateState: 0
+  liftState: 0
+  extendState: 0
   speed: 3
   myAB: {fileID: 0}
+  myABArmControllerComponent: {fileID: 0}
 --- !u!64 &5158835116785052164
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -11495,8 +11507,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 3
+  rotateState: 0
+  liftState: 0
+  extendState: 0
   speed: 500
   myAB: {fileID: 0}
+  myABArmControllerComponent: {fileID: 0}
 --- !u!1 &5158835117187801321
 GameObject:
   m_ObjectHideFlags: 0
@@ -12268,8 +12284,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 2
+  rotateState: 0
+  liftState: 0
+  extendState: 0
   speed: 3
   myAB: {fileID: 0}
+  myABArmControllerComponent: {fileID: 0}
 --- !u!4 &5158835117633502576
 Transform:
   m_ObjectHideFlags: 0
@@ -12748,7 +12768,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e89aca14150bd74eadd228319fd46ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlMode: 0
+  controlMode: 1
   joints:
   - robotPart: {fileID: 5158835117633502543}
   - robotPart: {fileID: 5158835117675887873}
@@ -12924,5 +12944,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 1
+  rotateState: 0
+  liftState: 0
+  extendState: 0
   speed: 3
   myAB: {fileID: 0}
+  myABArmControllerComponent: {fileID: 0}

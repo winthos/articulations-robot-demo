@@ -1376,13 +1376,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 177722991}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -3.618, y: -6.302, z: 2.951}
-  m_LocalScale: {x: 11.223597, y: 0.51261, z: 0.33315036}
+  m_LocalRotation: {x: -0, y: -0.70710576, z: -0, w: 0.70710784}
+  m_LocalPosition: {x: -10.47, y: -6.302, z: 2.951}
+  m_LocalScale: {x: 236.53731, y: 0.51261, z: 0.33315036}
   m_Children: []
   m_Father: {fileID: 1662036315}
   m_RootOrder: 38
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -90, z: 0}
 --- !u!23 &177722993
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1829,9 +1829,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b25edf245505ce04d92f1597296a054d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  forceTarget: {fileID: 2093786557}
-  forceTargetBack: {fileID: 193157391}
-  applyActionNoise: 1
+  applyActionNoise: 0
   movementGaussian: 0.1
   rotateGaussian: 0.1
   controlMode: 0
@@ -11277,6 +11275,7 @@ MonoBehaviour:
   extendState: 0
   speed: 3
   myAB: {fileID: 0}
+  myABArmControllerComponent: {fileID: 0}
 --- !u!64 &5158835116365451562
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -11594,6 +11593,7 @@ MonoBehaviour:
   extendState: 0
   speed: 3
   myAB: {fileID: 0}
+  myABArmControllerComponent: {fileID: 0}
 --- !u!64 &5158835116607587604
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -11946,6 +11946,7 @@ MonoBehaviour:
   extendState: 0
   speed: 3
   myAB: {fileID: 0}
+  myABArmControllerComponent: {fileID: 0}
 --- !u!64 &5158835116785052164
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -12511,6 +12512,7 @@ MonoBehaviour:
   extendState: 0
   speed: 500
   myAB: {fileID: 0}
+  myABArmControllerComponent: {fileID: 0}
 --- !u!1 &5158835117187801321
 GameObject:
   m_ObjectHideFlags: 0
@@ -13287,6 +13289,7 @@ MonoBehaviour:
   extendState: 0
   speed: 3
   myAB: {fileID: 0}
+  myABArmControllerComponent: {fileID: 0}
 --- !u!4 &5158835117633502576
 Transform:
   m_ObjectHideFlags: 0
@@ -13696,3 +13699,4 @@ MonoBehaviour:
   extendState: 0
   speed: 3
   myAB: {fileID: 0}
+  myABArmControllerComponent: {fileID: 0}

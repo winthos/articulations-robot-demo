@@ -13,8 +13,8 @@ public class TestABController : MonoBehaviour
     //use this to set global random object
     protected static System.Random systemRandom = new System.Random();
 
-    public GameObject forceTarget = null;
-    public GameObject forceTargetBack = null;
+    // public GameObject forceTarget = null;
+    // public GameObject forceTargetBack = null;
 
     public bool applyActionNoise = false;
     public float movementGaussian = 0.1f;
@@ -150,10 +150,10 @@ public class TestABController : MonoBehaviour
             Debug.Log(currentTime);
 
             //now apply force of given velocity change over this amount of time???
-            Vector3 forcePosition = new Vector3();
-            forcePosition = forceTarget.transform.position;
+            // Vector3 forcePosition = new Vector3();
+            // forcePosition = forceTarget.transform.position;
             GameObject targetObject = null;
-            targetObject = forceTarget;
+            // targetObject = forceTarget;
 
             //align direction
             targetVelocity = targetObject.transform.TransformDirection(targetVelocity);
@@ -168,7 +168,7 @@ public class TestABController : MonoBehaviour
             Vector3 velocityChange = (targetVelocity - currentVelocity);
 
 
-            ab.AddForceAtPosition(velocityChange, forcePosition);
+            ab.AddForce(velocityChange);
 
             currentTime += Time.smoothDeltaTime;
             yield return null;
@@ -181,27 +181,6 @@ public class TestABController : MonoBehaviour
     {
         if(rotateState == RotateState.Idle && moveState != MoveState.Idle)
         {
-            Vector3 forcePosition = new Vector3();
-
-            //prep to apply noise to forward direction if flagged to do so
-            GameObject targetObject = null;
-            if(moveState == MoveState.Forward)
-            {
-                forcePosition = forceTarget.transform.position;
-                targetObject = forceTarget;
-            }
-
-            else if(moveState == MoveState.Backward)
-            {
-                forcePosition = forceTargetBack.transform.position;
-                targetObject = forceTargetBack;
-            }
-            
-            if(applyActionNoise && targetObject != null)
-            {
-                float dirRandom = Random.Range(-movementGaussian, movementGaussian);
-                targetObject.transform.Rotate(0, dirRandom, 0);
-            }
 
             //find target velocity
             Vector3 currentVelocity = ab.velocity;
@@ -210,11 +189,10 @@ public class TestABController : MonoBehaviour
             targetvelocity *= moveSpeed;
 
             //allign direction
-            targetvelocity = targetObject.transform.TransformDirection(targetvelocity);
+            targetvelocity = ab.transform.TransformDirection(targetvelocity);
 
             //calculate forces
             Vector3 velocityChange = (targetvelocity - currentVelocity);
-            Debug.Log(Time.fixedDeltaTime);
 
             // change center of mass
             ab.centerOfMass = Vector3.zero;
@@ -223,8 +201,8 @@ public class TestABController : MonoBehaviour
                 // Debug.Log(abChild.gameObject.name + "'s new centerOfMass is (" + abChild.centerOfMass.x + ", " + abChild.centerOfMass.y + ", " + abChild.centerOfMass.z + ")");
             }
 
-            Debug.Log("velocityChange of " + velocityChange + " at " + forcePosition);
-            ab.AddForceAtPosition(velocityChange, forcePosition);
+            Debug.Log("velocityChange of " + velocityChange + " at " + ab.centerOfMass);
+            ab.AddForce(velocityChange);
         }
     }
 
@@ -232,33 +210,15 @@ public class TestABController : MonoBehaviour
     {
         if(rotateState != RotateState.Idle && moveState == MoveState.Idle)
         {
-            float rotateAmount;
-
-            if(applyActionNoise)
-            {
-                float rotRandom = Random.Range(-rotateGaussian, rotateGaussian);
-                rotateAmount = rotate + rotRandom;
+            // change center of mass
+            ab.centerOfMass = Vector3.zero;
+            foreach (ArticulationBody abChild in abChildren) {
+                abChild.centerOfMass = abChild.transform.InverseTransformPoint(ab.worldCenterOfMass);
+                // Debug.Log(abChild.gameObject.name + "'s new centerOfMass is (" + abChild.centerOfMass.x + ", " + abChild.centerOfMass.y + ", " + abChild.centerOfMass.z + ")");
             }
 
-            else
-            {
-                rotateAmount = rotate;
-            }
-
-            //Debug.Log(rotateAmount);
-
-            if(rotateState != RotateState.Idle && moveState == MoveState.Idle)
-            {
-                // change center of mass
-                ab.centerOfMass = Vector3.zero;
-                foreach (ArticulationBody abChild in abChildren) {
-                    abChild.centerOfMass = abChild.transform.InverseTransformPoint(ab.worldCenterOfMass);
-                    // Debug.Log(abChild.gameObject.name + "'s new centerOfMass is (" + abChild.centerOfMass.x + ", " + abChild.centerOfMass.y + ", " + abChild.centerOfMass.z + ")");
-                }
-
-                //note 2021 unity adds a forceMode paramater to AddTorque so uhhhh
-                ab.AddTorque(Vector3.up * rotateAmount * rotateSpeed);
-            }
+            //note 2021 unity adds a forceMode paramater to AddTorque so uhhhh
+            ab.AddTorque(Vector3.up * rotate * rotateSpeed);
         }
     }
 

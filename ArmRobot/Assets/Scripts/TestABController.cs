@@ -26,7 +26,6 @@ public class TestABController : MonoBehaviour
 
     [Header("Reference to this Articulation Body")]
     public ArticulationBody ab;
-    public List<ArticulationBody> abChildren = new List<ArticulationBody>();
 
     [Header("Speed for movement and rotation")]
     public float moveSpeed;
@@ -216,14 +215,6 @@ public class TestABController : MonoBehaviour
             Vector3 velocityChange = (targetvelocity - currentVelocity);
             Debug.Log(Time.fixedDeltaTime);
 
-            // change center of mass
-            ab.centerOfMass = Vector3.zero;
-            foreach (ArticulationBody abChild in abChildren) {
-                abChild.centerOfMass = abChild.transform.InverseTransformPoint(ab.worldCenterOfMass);
-                // Debug.Log(abChild.gameObject.name + "'s new centerOfMass is (" + abChild.centerOfMass.x + ", " + abChild.centerOfMass.y + ", " + abChild.centerOfMass.z + ")");
-            }
-
-            Debug.Log("velocityChange of " + velocityChange + " at " + forcePosition);
             ab.AddForceAtPosition(velocityChange, forcePosition);
         }
     }
@@ -249,13 +240,6 @@ public class TestABController : MonoBehaviour
 
             if(rotateState != RotateState.Idle && moveState == MoveState.Idle)
             {
-                // change center of mass
-                ab.centerOfMass = Vector3.zero;
-                foreach (ArticulationBody abChild in abChildren) {
-                    abChild.centerOfMass = abChild.transform.InverseTransformPoint(ab.worldCenterOfMass);
-                    // Debug.Log(abChild.gameObject.name + "'s new centerOfMass is (" + abChild.centerOfMass.x + ", " + abChild.centerOfMass.y + ", " + abChild.centerOfMass.z + ")");
-                }
-
                 //note 2021 unity adds a forceMode paramater to AddTorque so uhhhh
                 ab.AddTorque(Vector3.up * rotateAmount * rotateSpeed);
             }

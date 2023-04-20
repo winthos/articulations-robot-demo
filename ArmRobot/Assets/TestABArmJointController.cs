@@ -158,8 +158,10 @@ public class TestABArmJointController : MonoBehaviour
     {
         if (currentArmMoveParams.timeTakenSoFar < currentArmMoveParams.totalTimeNeededToReachDistanceAtSomeSpeed)
         {
-            Debug.Log($"time taken moving so far: {currentArmMoveParams.timeTakenSoFar}");
+            //Debug.Log($"time taken moving so far: {currentArmMoveParams.timeTakenSoFar}");
             float yDrivePosition = myAB.jointPosition[0];
+            Debug.Log($"yDrivePosition: {yDrivePosition}");
+
             float targetPosition = yDrivePosition + currentArmMoveParams.distanceToChangeWithEachTimeStep;
 
             var drive = myAB.yDrive;

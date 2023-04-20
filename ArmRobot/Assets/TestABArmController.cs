@@ -32,7 +32,7 @@ public class TestABArmController : MonoBehaviour
     {
         if(Input.GetKeyDown(KeyCode.Space))
         {
-            ActionMoveArmLiftUp(1.0f, 1.0f);
+            ActionMoveArmLiftUp(1f, 1.0f);
         }
     }
 

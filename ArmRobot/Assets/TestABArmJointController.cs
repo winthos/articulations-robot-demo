@@ -15,6 +15,7 @@ public class ArmMoveParams
     public float totalTimeNeededToReachDistanceAtSomeSpeed;
     public float totalNumberOfTimeSteps;
     public float distanceToChangeWithEachTimeStep;
+    public float lastTargetPosition;
 }
 
 public class TestABArmJointController : MonoBehaviour
@@ -52,52 +53,33 @@ public class TestABArmJointController : MonoBehaviour
 
     private void Update()
     {
-        // if(Input.GetKeyDown(KeyCode.Space))
-        // {
-        //     StartCoroutine(ExtendToDistance(0.05f, 1.0f));
-        // }
-    }
-
-    //this straight up isn't working right yet uhhhhhhhh
-    //set drive targets via distance for action based input instead of held button input
-    private IEnumerator ExtendToDistance(float distance, float speed)
-    {
-        //Debug.Log($"distance: {distance}");
-        //Debug.Log($"speed: {speed}");
-
-        float timeTakenSoFar = 0f;
-        float totalTimeNeededToReachDistanceAtSomeSpeed = distance/speed;
-        //Debug.Log($"totalTimeNeededToReachDistanceAtSomeSpeed: {totalTimeNeededToReachDistanceAtSomeSpeed}");
-
-        float totalNumberOfTimeSteps = totalTimeNeededToReachDistanceAtSomeSpeed / Time.fixedDeltaTime;
-        //Debug.Log($"totalNumberOfTimeSteps: {totalNumberOfTimeSteps}");
-
-        float distanceToChangeWithEachTimeStep = distance/totalNumberOfTimeSteps;
-        //Debug.Log($"distanceToChangeWithEachTimeStep: {distanceToChangeWithEachTimeStep}");
-
-        //Debug.Log($"distancePerStep * total Number Steps: {totalNumberOfTimeSteps * distanceToChangeWithEachTimeStep}");
-        yield return new WaitForFixedUpdate();
- 
-        while (timeTakenSoFar < totalTimeNeededToReachDistanceAtSomeSpeed)
+        if(Input.GetKeyDown(KeyCode.G))
         {
-            Debug.Log($"timeTakenSoFar: {timeTakenSoFar}");
-
-            float zDrivePosition = myAB.jointPosition[0];
-            //Debug.Log($"zDrivePosition: {zDrivePosition}");
-
-            float targetPosition = zDrivePosition + distanceToChangeWithEachTimeStep;
-            //Debug.Log($"targetPosition: {targetPosition}");
-
-            var drive = myAB.zDrive;
-            drive.target = targetPosition;
-            myAB.zDrive = drive;
-
-            yield return new WaitForFixedUpdate();
-            timeTakenSoFar += Time.fixedDeltaTime;
-            Debug.Log($"timeTakenSoFar after fixed update?: {timeTakenSoFar}");
+            LiftUp(0.3f);
         }
 
-        yield return null;
+        if(Input.GetKeyDown(KeyCode.B))
+        {
+            LiftDown(0.3f);
+        }
+    }
+
+    //ok so this literally just moves the drive to some offset specified
+    //drive applies force with: F = stiffness * (currentPosition - target) - damping * (currentVelocity - targetVelocity)
+    private void LiftUp(float distance)
+    {
+        var drive = myAB.yDrive;
+        float yDrivePosition = myAB.jointPosition[0];
+        drive.target = yDrivePosition + distance;
+        myAB.yDrive = drive;    
+    }
+
+    private void LiftDown(float distance)
+    {
+        var drive = myAB.yDrive;
+        float yDrivePosition = myAB.jointPosition[0];
+        drive.target = yDrivePosition - distance;
+        myAB.yDrive = drive;    
     }
 
     private void ControlJointFromKeyboardInput()
@@ -112,6 +94,8 @@ public class TestABArmJointController : MonoBehaviour
                 //Debug.Log(xDrivePostion);
 
                 //increment this y position
+                //speed = dist/time
+                //so time.fixedDelta * (m/s), results in some distance position change
                 float targetPosition = yDrivePostion + (float)liftState * Time.fixedDeltaTime * speed;
 
                 //set joint Drive to new position
@@ -154,6 +138,8 @@ public class TestABArmJointController : MonoBehaviour
         }
     }
 
+    private int count = 0;
+
     private void ControlJointFromAction()
     {
         if (currentArmMoveParams.timeTakenSoFar < currentArmMoveParams.totalTimeNeededToReachDistanceAtSomeSpeed)
@@ -162,13 +148,32 @@ public class TestABArmJointController : MonoBehaviour
             float yDrivePosition = myAB.jointPosition[0];
             Debug.Log($"yDrivePosition: {yDrivePosition}");
 
+            var drive = myAB.yDrive;
+
+            //ok we haven't reached the last set target position yet, so skip
+            if(yDrivePosition < currentArmMoveParams.lastTargetPosition)
+            {
+                Debug.Log("in second loop");
+                drive.target = currentArmMoveParams.lastTargetPosition;
+                myAB.yDrive = drive;
+
+                currentArmMoveParams.timeTakenSoFar += Time.deltaTime;
+                count++;
+                return;
+            }
+
+            //set the new target position we want this body to reach
             float targetPosition = yDrivePosition + currentArmMoveParams.distanceToChangeWithEachTimeStep;
 
-            var drive = myAB.yDrive;
+            currentArmMoveParams.lastTargetPosition = targetPosition;
+
+            //ok all this sets the drive to move toward the current targetPosition
             drive.target = targetPosition;
             myAB.yDrive = drive;
 
             currentArmMoveParams.timeTakenSoFar += Time.deltaTime;
+            count++;
+            Debug.Log($"count of fixed updates: {count}");
         }
 
         else

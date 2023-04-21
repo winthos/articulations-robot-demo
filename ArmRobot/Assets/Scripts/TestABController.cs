@@ -43,7 +43,8 @@ public class TestABController : MonoBehaviour
     
     public void Start()
     {
-        //print(ab.centerOfMass);
+        print(ab.centerOfMass);
+        forceTarget.transform.localPosition = ab.centerOfMass;
     }
 
     public void OnMove(InputAction.CallbackContext context) 
@@ -159,6 +160,7 @@ public class TestABController : MonoBehaviour
 
             if(applyActionNoise && targetObject != null)
             {
+                //this should probably change to applying a random torque rather than rotating the forward direction
                 float dirRandom = Random.Range(-movementGaussian, movementGaussian);
                 targetObject.transform.Rotate(0, dirRandom, 0);
             }
@@ -213,7 +215,7 @@ public class TestABController : MonoBehaviour
 
             //calculate forces
             Vector3 velocityChange = (targetvelocity - currentVelocity);
-            Debug.Log(Time.fixedDeltaTime);
+            //Debug.Log(Time.fixedDeltaTime);
 
             ab.AddForceAtPosition(velocityChange, forcePosition);
         }

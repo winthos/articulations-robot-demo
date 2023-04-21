@@ -47,8 +47,13 @@ public class TestABArmController : MonoBehaviour
 
         //pre calculate all the things we need for physics
         var totalTimeNeededToReachDistanceAtSomeSpeed = distance/speed;
+        Debug.Log($"totalTimeNeededToReachDistanceAtSomeSpeed: {totalTimeNeededToReachDistanceAtSomeSpeed}");
+
         var totalNumberOfTimeSteps = totalTimeNeededToReachDistanceAtSomeSpeed / Time.fixedDeltaTime;
+        Debug.Log($"totalNumberOfTimeSteps: {totalNumberOfTimeSteps}");
+
         var distanceToChangeWithEachTimeStep = distance/totalNumberOfTimeSteps;
+        Debug.Log($"distanceToChangeWithEachTimeStep: {distanceToChangeWithEachTimeStep}");
 
         lift.currentArmMoveParams = new ArmMoveParams()
         {

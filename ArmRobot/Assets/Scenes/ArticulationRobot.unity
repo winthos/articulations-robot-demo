@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657815, g: 0.49641192, b: 0.57481617, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -13063,14 +13063,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e89aca14150bd74eadd228319fd46ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlMode: 0
+  controlMode: 1
   joints:
   - robotPart: {fileID: 5158835117633502543}
+    JointDistanceToMove: 0.5
   - robotPart: {fileID: 5158835117675887873}
+    JointDistanceToMove: 0.2
   - robotPart: {fileID: 5158835116365451561}
+    JointDistanceToMove: 0.2
   - robotPart: {fileID: 5158835116607587603}
+    JointDistanceToMove: 0.2
   - robotPart: {fileID: 5158835116785052163}
+    JointDistanceToMove: 0.2
   - robotPart: {fileID: 5158835117057418593}
+    JointDistanceToMove: 0.2
 --- !u!33 &5158835117675887842
 MeshFilter:
   m_ObjectHideFlags: 0

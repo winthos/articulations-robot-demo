@@ -53,33 +53,89 @@ public class TestABArmJointController : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.G))
-        {
-            LiftUp(0.3f);
-        }
+        // if(Input.GetKeyDown(KeyCode.G))
+        // {
+        //     LiftUp(0.3f);
+        // }
 
-        if(Input.GetKeyDown(KeyCode.B))
-        {
-            LiftDown(0.3f);
-        }
+        // if(Input.GetKeyDown(KeyCode.B))
+        // {
+        //     LiftDown(0.3f);
+        // }
+        // Debug.Log(myAB.velocity);
     }
 
     //ok so this literally just moves the drive to some offset specified
     //drive applies force with: F = stiffness * (currentPosition - target) - damping * (currentVelocity - targetVelocity)
-    private void LiftUp(float distance)
+    // private void LiftUp(float distance)
+    // {
+    //     var drive = myAB.yDrive;
+    //     float yDrivePosition = myAB.jointPosition[0];
+    //     drive.target = yDrivePosition + distance;
+    //     myAB.yDrive = drive;    
+    // }
+
+    // private void LiftDown(float distance)
+    // {
+    //     var drive = myAB.yDrive;
+    //     float yDrivePosition = myAB.jointPosition[0];
+    //     drive.target = yDrivePosition - distance;
+    //     myAB.yDrive = drive;    
+    // }
+
+    public void ControlJointFromAction(float distance)
     {
-        var drive = myAB.yDrive;
-        float yDrivePosition = myAB.jointPosition[0];
-        drive.target = yDrivePosition + distance;
-        myAB.yDrive = drive;    
+        if(jointAxisType == JointAxisType.Lift && liftState == ArmLiftState.Idle)
+        {
+            if(distance < 0)
+            {
+                liftState = ArmLiftState.MovingDown;
+            }
+
+            else
+            {
+                liftState = ArmLiftState.MovingUp;
+            }
+
+            var drive = myAB.yDrive;
+            float yDrivePosition = myAB.jointPosition[0];
+            drive.target = yDrivePosition + distance;
+            myAB.yDrive = drive;       
+
+            //launch coroutine to check when the movement has finished
+            StartCoroutine(AreWeDoneMoving());
+            return;
+        }
     }
 
-    private void LiftDown(float distance)
+    private IEnumerator AreWeDoneMoving()
     {
-        var drive = myAB.yDrive;
-        float yDrivePosition = myAB.jointPosition[0];
-        drive.target = yDrivePosition - distance;
-        myAB.yDrive = drive;    
+        float count = 0;
+        float lastVelocityMagnitude = 0f;
+        while(liftState != ArmLiftState.Idle)
+        {   
+            yield return new WaitForFixedUpdate();
+            count += Time.deltaTime;
+
+            var currentVelocityMagnitude = myAB.velocity.magnitude;
+            Debug.Log(currentVelocityMagnitude);
+            if(Mathf.Approximately(currentVelocityMagnitude,lastVelocityMagnitude))
+            {   
+                Debug.Log("velocity stopped changing enough");
+                liftState = ArmLiftState.Idle;
+            }
+
+            lastVelocityMagnitude = currentVelocityMagnitude;
+
+            if(count >= 5.0f)
+            {
+                Debug.Log("hard time out check");
+                liftState = ArmLiftState.Idle;
+            }
+        }
+
+        Debug.Log("done moving!");
+        yield return null;
     }
 
     private void ControlJointFromKeyboardInput()
@@ -138,50 +194,50 @@ public class TestABArmJointController : MonoBehaviour
         }
     }
 
-    private int count = 0;
+    // private int count = 0;
 
-    private void ControlJointFromAction()
-    {
-        if (currentArmMoveParams.timeTakenSoFar < currentArmMoveParams.totalTimeNeededToReachDistanceAtSomeSpeed)
-        {
-            //Debug.Log($"time taken moving so far: {currentArmMoveParams.timeTakenSoFar}");
-            float yDrivePosition = myAB.jointPosition[0];
-            Debug.Log($"yDrivePosition: {yDrivePosition}");
+    // private void ControlJointFromAction()
+    // {
+    //     if (currentArmMoveParams.timeTakenSoFar < currentArmMoveParams.totalTimeNeededToReachDistanceAtSomeSpeed)
+    //     {
+    //         //Debug.Log($"time taken moving so far: {currentArmMoveParams.timeTakenSoFar}");
+    //         float yDrivePosition = myAB.jointPosition[0];
+    //         Debug.Log($"yDrivePosition: {yDrivePosition}");
 
-            var drive = myAB.yDrive;
+    //         var drive = myAB.yDrive;
 
-            //ok we haven't reached the last set target position yet, so skip
-            if(yDrivePosition < currentArmMoveParams.lastTargetPosition)
-            {
-                Debug.Log("in second loop");
-                drive.target = currentArmMoveParams.lastTargetPosition;
-                myAB.yDrive = drive;
+    //         //ok we haven't reached the last set target position yet, so skip
+    //         if(yDrivePosition < currentArmMoveParams.lastTargetPosition)
+    //         {
+    //             Debug.Log("in second loop");
+    //             drive.target = currentArmMoveParams.lastTargetPosition;
+    //             myAB.yDrive = drive;
 
-                currentArmMoveParams.timeTakenSoFar += Time.deltaTime;
-                count++;
-                return;
-            }
+    //             currentArmMoveParams.timeTakenSoFar += Time.deltaTime;
+    //             count++;
+    //             return;
+    //         }
 
-            //set the new target position we want this body to reach
-            float targetPosition = yDrivePosition + currentArmMoveParams.distanceToChangeWithEachTimeStep;
+    //         //set the new target position we want this body to reach
+    //         float targetPosition = yDrivePosition + currentArmMoveParams.distanceToChangeWithEachTimeStep;
 
-            currentArmMoveParams.lastTargetPosition = targetPosition;
+    //         currentArmMoveParams.lastTargetPosition = targetPosition;
 
-            //ok all this sets the drive to move toward the current targetPosition
-            drive.target = targetPosition;
-            myAB.yDrive = drive;
+    //         //ok all this sets the drive to move toward the current targetPosition
+    //         drive.target = targetPosition;
+    //         myAB.yDrive = drive;
 
-            currentArmMoveParams.timeTakenSoFar += Time.deltaTime;
-            count++;
-            Debug.Log($"count of fixed updates: {count}");
-        }
+    //         currentArmMoveParams.timeTakenSoFar += Time.deltaTime;
+    //         count++;
+    //         Debug.Log($"count of fixed updates: {count}");
+    //     }
 
-        else
-        {
-            //we have finished moving to the target position so set arm to idle and stop moving
-            SetArmLiftState(ArmLiftState.Idle);
-        }
-    }
+    //     else
+    //     {
+    //         //we have finished moving to the target position so set arm to idle and stop moving
+    //         SetArmLiftState(ArmLiftState.Idle);
+    //     }
+    // }
 
     private void FixedUpdate()
     { 
@@ -192,14 +248,14 @@ public class TestABArmJointController : MonoBehaviour
         }
 
         //action input, pass in direction, speed, etc
-        else if(myABArmControllerComponent.controlMode == ABControlMode.Actions)
-        {
-            if(liftState != ArmLiftState.Idle)
-            {
-                //Debug.Log("try to move arm lift up with action");
-                ControlJointFromAction();
-            }
-        }
+        // else if(myABArmControllerComponent.controlMode == ABControlMode.Actions)
+        // {
+        //     if(liftState != ArmLiftState.Idle)
+        //     {
+        //         //Debug.Log("try to move arm lift up with action");
+        //         ControlJointFromAction();
+        //     }
+        // }
     }
 
     // MOVEMENT HELPERS for rotate

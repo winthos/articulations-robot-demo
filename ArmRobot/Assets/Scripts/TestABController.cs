@@ -214,7 +214,7 @@ public class TestABController : MonoBehaviour
             targetvelocity = targetObject.transform.TransformDirection(targetvelocity);
 
             //calculate forces
-            Vector3 velocityChange = (targetvelocity - currentVelocity);
+            Vector3 velocityChange = (targetvelocity - currentVelocity); //this is F = mvt I think?
             //Debug.Log(Time.fixedDeltaTime);
 
             ab.AddForceAtPosition(velocityChange, forcePosition);

@@ -15,6 +15,7 @@ public class TestABArmController : MonoBehaviour
     public struct Joint
     {
         public TestABArmJointController robotPart;
+        public float JointDistanceToMove;
     }
 
     public Joint[] joints;
@@ -30,62 +31,67 @@ public class TestABArmController : MonoBehaviour
 
     private void Update()
     {
-        if(Input.GetKeyDown(KeyCode.Space))
-        {
-            ActionMoveArmLiftUp(1f, 1.0f);
-        }
+        // if(Input.GetKeyDown(KeyCode.Space))
+        // {
+        //     ActionMoveArmLiftUp(1f, 1.0f);
+        // }
     }
 
-    public void ActionMoveArmLiftUp(float distance, float speed)
-    {
-        if(controlMode != ABControlMode.Actions)
-        {
-            return;
-        }
+    // public void ActionMoveArmLiftUp(float distance, float speed)
+    // {
+    //     if(controlMode != ABControlMode.Actions)
+    //     {
+    //         return;
+    //     }
 
-        TestABArmJointController lift = joints[0].robotPart;
+    //     TestABArmJointController lift = joints[0].robotPart;
 
-        //pre calculate all the things we need for physics
-        var totalTimeNeededToReachDistanceAtSomeSpeed = distance/speed;
-        Debug.Log($"totalTimeNeededToReachDistanceAtSomeSpeed: {totalTimeNeededToReachDistanceAtSomeSpeed}");
+    //     //pre calculate all the things we need for physics
+    //     var totalTimeNeededToReachDistanceAtSomeSpeed = distance/speed;
+    //     Debug.Log($"totalTimeNeededToReachDistanceAtSomeSpeed: {totalTimeNeededToReachDistanceAtSomeSpeed}");
 
-        var totalNumberOfTimeSteps = totalTimeNeededToReachDistanceAtSomeSpeed / Time.fixedDeltaTime;
-        Debug.Log($"totalNumberOfTimeSteps: {totalNumberOfTimeSteps}");
+    //     var totalNumberOfTimeSteps = totalTimeNeededToReachDistanceAtSomeSpeed / Time.fixedDeltaTime;
+    //     Debug.Log($"totalNumberOfTimeSteps: {totalNumberOfTimeSteps}");
 
-        var distanceToChangeWithEachTimeStep = distance/totalNumberOfTimeSteps;
-        Debug.Log($"distanceToChangeWithEachTimeStep: {distanceToChangeWithEachTimeStep}");
+    //     var distanceToChangeWithEachTimeStep = distance/totalNumberOfTimeSteps;
+    //     Debug.Log($"distanceToChangeWithEachTimeStep: {distanceToChangeWithEachTimeStep}");
 
-        lift.currentArmMoveParams = new ArmMoveParams()
-        {
-            distance = distance,
-            speed = speed,
-            timeTakenSoFar = 0.0f,
-            totalTimeNeededToReachDistanceAtSomeSpeed = totalTimeNeededToReachDistanceAtSomeSpeed,
-            totalNumberOfTimeSteps = totalNumberOfTimeSteps,
-            distanceToChangeWithEachTimeStep = distanceToChangeWithEachTimeStep
-        };
+    //     lift.currentArmMoveParams = new ArmMoveParams()
+    //     {
+    //         distance = distance,
+    //         speed = speed,
+    //         timeTakenSoFar = 0.0f,
+    //         totalTimeNeededToReachDistanceAtSomeSpeed = totalTimeNeededToReachDistanceAtSomeSpeed,
+    //         totalNumberOfTimeSteps = totalNumberOfTimeSteps,
+    //         distanceToChangeWithEachTimeStep = distanceToChangeWithEachTimeStep
+    //     };
 
-        lift.SetArmLiftState(ArmLiftState.MovingUp);
-    }
+    //     lift.SetArmLiftState(ArmLiftState.MovingUp);
+    // }
 
     //callback that runs on loop when H or N keys are pressed to lift or lower arm rig
     public void OnMoveArmLift(InputAction.CallbackContext context)
     {
-        if(controlMode != ABControlMode.Keyboard_Input) 
-        {
-            return;
-        }
 
         if(joints[0].robotPart == null) {
             throw new ArgumentException("Yo its null, please make not null");
         }
+
         TestABArmJointController lift = joints[0].robotPart;
+        //get direction based on input
         var input = context.ReadValue<float>();
-        //Debug.Log($"ArmMoveState input is: {input}");
-        lift.SetArmLiftState(LiftStateFromInput(input));
-        //Debug.Log($"Lift liftState set to {lift.liftState}");
-        //now pass the arm state to the arm joint controller here I guess inside this callback?
-        
+
+        //mimic old api by sending a single action to move a set distance
+        if(controlMode == ABControlMode.Actions) 
+        {
+            lift.ControlJointFromAction(joints[0].JointDistanceToMove * input);
+        }
+
+        //continuously move as long as keyboard input is pressed down
+        else if(controlMode == ABControlMode.Keyboard_Input)
+        {
+            lift.SetArmLiftState(LiftStateFromInput(input));
+        }
     }
 
     //reads input from the Player Input component to move an arm joint up and down along its local Y axis

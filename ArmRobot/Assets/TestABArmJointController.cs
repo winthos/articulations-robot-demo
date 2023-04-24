@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public enum ArmLiftState { Idle = 0, MovingDown = -1, MovingUp = 1 };
 public enum ArmExtendState {Idle = 0, MovingBackward = -1, MovingForward = 1};
@@ -108,34 +109,84 @@ public class TestABArmJointController : MonoBehaviour
         }
     }
 
+    public float TimeOut = 5.0f;
+    public float Tolerance = 1e-3f;
+    public int NumberOfCachedVelocities = 5;
+
+    //how to determine if we have "reached target succesfully"
+    // compare velocity? if it hasn't changed or reached zero, we have stopped moving
+    // compare target position and current joint position? If close enough, we have reached target
+    // some sort of time based check, calculate how long it would take to move to target and time out?
     private IEnumerator AreWeDoneMoving()
     {
-        float count = 0;
-        float lastVelocityMagnitude = 0f;
+        float timePassed = 0;
+        //float lastVelocityMagnitude = 0f;
+        float[] cachedVelocities = new float[NumberOfCachedVelocities];
+        int oldestCachedIndex = 0;
+
         while(liftState != ArmLiftState.Idle)
         {   
             yield return new WaitForFixedUpdate();
-            count += Time.deltaTime;
+            timePassed += Time.deltaTime;
 
             var currentVelocityMagnitude = myAB.velocity.magnitude;
-            Debug.Log(currentVelocityMagnitude);
-            if(Mathf.Approximately(currentVelocityMagnitude,lastVelocityMagnitude))
-            {   
-                Debug.Log("velocity stopped changing enough");
-                liftState = ArmLiftState.Idle;
-            }
 
-            lastVelocityMagnitude = currentVelocityMagnitude;
+            cachedVelocities[oldestCachedIndex] = currentVelocityMagnitude;
+            //update the last cached velocities up to the max number we wanted to cache
+            oldestCachedIndex = (oldestCachedIndex + 1) % NumberOfCachedVelocities;
 
-            if(count >= 5.0f)
+            //update the oldest index updated in the cached velocities I guess????
+            if(oldestCachedIndex == 0)
             {
-                Debug.Log("hard time out check");
+                cachedVelocities[oldestCachedIndex] = currentVelocityMagnitude;
+            }
+
+            //compare all cached velocities to see if they are all within the threshold
+            if(CheckArrayWithinStandardDeviation(cachedVelocities, Tolerance))
+            {
+                Debug.Log($"last {NumberOfCachedVelocities} velocities were within tolerence: {Tolerance}");
                 liftState = ArmLiftState.Idle;
             }
+
+            //hard timeout check in case for some reason the cached velocity comparisons go infinite
+            if(timePassed >= TimeOut)
+            {
+                Debug.Log("hard time out check happened");
+                liftState = ArmLiftState.Idle;
+            }
+
+            //Debug.Log(myAB.jointPosition[0]);
+            //Debug.Log(myAB.yDrive.target);
         }
 
         Debug.Log("done moving!");
         yield return null;
+    }
+
+bool CheckArrayWithinStandardDeviation(float[] values, float standardDeviation)
+{
+    // Calculate the mean value of the array
+    float mean = values.Average();
+
+    // Calculate the sum of squares of the differences between each value and the mean
+    float sumOfSquares = 0.0f;
+    foreach (float value in values)
+    {
+        sumOfSquares += (value - mean) * (value - mean);
+    }
+
+    // Calculate the standard deviation of the array
+    float arrayStdDev = (float)Mathf.Sqrt(sumOfSquares / values.Length);
+
+    // Check if the standard deviation of the array is within the specified range
+    return arrayStdDev <= standardDeviation;
+}
+
+
+    private bool SeeIfTheFloatsAreWithinTheTolerance(float a, float b, float tolerance)
+    {
+        var diff = Mathf.Abs(a - b);
+        return diff <= tolerance || diff <= Mathf.Max(Mathf.Abs(a), Mathf.Abs(b)) * tolerance;
     }
 
     private void ControlJointFromKeyboardInput()

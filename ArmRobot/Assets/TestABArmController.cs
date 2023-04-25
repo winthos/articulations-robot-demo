@@ -77,6 +77,7 @@ public class TestABArmController : MonoBehaviour
         {
             if(LiftStateFromInput(context.ReadValue<float>()) == ArmLiftState.MovingUp)
             {
+                //these parameters here act as if a researcher has put them in as an action
                 MoveArmBaseUp(
                     distance: 0.5f,
                     speed: 4.0f,
@@ -88,6 +89,7 @@ public class TestABArmController : MonoBehaviour
 
             else if(LiftStateFromInput(context.ReadValue<float>()) == ArmLiftState.MovingDown)
             {
+                //these parameters here act as if a researcher has put them in as an action
                 MoveArmBaseDown(
                     distance: 0.5f,
                     speed: 4.0f,

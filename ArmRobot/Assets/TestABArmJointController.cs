@@ -143,13 +143,13 @@ public class TestABArmJointController : MonoBehaviour
                     //go ahead and update index 0 super quick so we don't miss it
                     currentArmMoveParams.cachedPositions[currentArmMoveParams.oldestCachedIndex] = currentPosition;
                     
-                    //compare the distance from current position to the target position (distanceToMove)
                     //for the last {NumberOfCachedPositions} positions, and if that amount hasn't changed
-                    //by the {tolerance} deviation then we have stopped moving
+                    //by the {tolerance} deviation then we have presumably stopped moving
                     if(CheckArrayWithinStandardDeviation(currentArmMoveParams.cachedPositions, currentArmMoveParams.tolerance))
                     {
                         Debug.Log($"last {currentArmMoveParams.positionCacheSize} positions were within tolerance, stop moving now!");
                         liftState = ArmLiftState.Idle;
+                        //actionFinished(true) will go here
                         return;
                     }
                 }
@@ -159,6 +159,7 @@ public class TestABArmJointController : MonoBehaviour
                 {
                     Debug.Log("we have moved to or a little beyond the distance specified to move so STOOOP");
                     liftState = ArmLiftState.Idle;
+                    //actionFinished(true) will go here
                     return;
                 }
                 
@@ -169,10 +170,12 @@ public class TestABArmJointController : MonoBehaviour
                 {
                     Debug.Log($"{currentArmMoveParams.timePassed} seconds have passed. Time out happening, stop moving!");
                     liftState = ArmLiftState.Idle;
+                    //actionFinished(true) will go here
                     return;
                 }
             }
 
+            //we are set to be in an idle state so return and do nothing
             return;
         }
     }

@@ -1884,6 +1884,80 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 0.085155435, y: 0.0965906, z: 0.08612113}
   m_Center: {x: 0.00016176696, y: 0.014425237, z: 0.0012877841}
+--- !u!1001 &443334902
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 1662036315}
+    m_Modifications:
+    - target: {fileID: -4216859302048453862, guid: 3fba682e7b5a0444eb5e51e6fc772147,
+        type: 3}
+      propertyPath: m_RootOrder
+      value: 39
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 3fba682e7b5a0444eb5e51e6fc772147,
+        type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -3.5469995
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 3fba682e7b5a0444eb5e51e6fc772147,
+        type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -6.0529904
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 3fba682e7b5a0444eb5e51e6fc772147,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 1.692
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 3fba682e7b5a0444eb5e51e6fc772147,
+        type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 3fba682e7b5a0444eb5e51e6fc772147,
+        type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 3fba682e7b5a0444eb5e51e6fc772147,
+        type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 3fba682e7b5a0444eb5e51e6fc772147,
+        type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 3fba682e7b5a0444eb5e51e6fc772147,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 3fba682e7b5a0444eb5e51e6fc772147,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -4216859302048453862, guid: 3fba682e7b5a0444eb5e51e6fc772147,
+        type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -1504981713932161579, guid: 3fba682e7b5a0444eb5e51e6fc772147,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -927199367670048503, guid: 3fba682e7b5a0444eb5e51e6fc772147,
+        type: 3}
+      propertyPath: m_Name
+      value: Table (3)
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3fba682e7b5a0444eb5e51e6fc772147, type: 3}
 --- !u!1 &455248115
 GameObject:
   m_ObjectHideFlags: 0
@@ -6774,6 +6848,48 @@ Transform:
   m_Father: {fileID: 1662036315}
   m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1556696143 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: -927199367670048503, guid: 3fba682e7b5a0444eb5e51e6fc772147,
+    type: 3}
+  m_PrefabInstance: {fileID: 443334902}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &1556696144 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -4216859302048453862, guid: 3fba682e7b5a0444eb5e51e6fc772147,
+    type: 3}
+  m_PrefabInstance: {fileID: 443334902}
+  m_PrefabAsset: {fileID: 0}
+--- !u!64 &1556696145
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556696143}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Convex: 0
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -6692290496178104961, guid: 3fba682e7b5a0444eb5e51e6fc772147, type: 3}
+--- !u!54 &1556696146
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1556696143}
+  serializedVersion: 2
+  m_Mass: 100
+  m_Drag: 0
+  m_AngularDrag: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 3
 --- !u!1 &1557304988
 GameObject:
   m_ObjectHideFlags: 0
@@ -7278,6 +7394,7 @@ Transform:
   - {fileID: 476955813}
   - {fileID: 1670838924}
   - {fileID: 177722992}
+  - {fileID: 1556696144}
   m_Father: {fileID: 0}
   m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -10571,6 +10688,10 @@ MonoBehaviour:
   speed: 3
   myAB: {fileID: 0}
   myABArmControllerComponent: {fileID: 0}
+  MaxTimeTaken: 5
+  Tolerance: 0.001
+  NumberOfCachedPositions: 5
+  distanceToMoveEpsilon: 0.001
 --- !u!64 &5158835116365451562
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -10889,6 +11010,10 @@ MonoBehaviour:
   speed: 3
   myAB: {fileID: 0}
   myABArmControllerComponent: {fileID: 0}
+  MaxTimeTaken: 5
+  Tolerance: 0.001
+  NumberOfCachedPositions: 5
+  distanceToMoveEpsilon: 0.001
 --- !u!64 &5158835116607587604
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -11242,6 +11367,10 @@ MonoBehaviour:
   speed: 3
   myAB: {fileID: 0}
   myABArmControllerComponent: {fileID: 0}
+  MaxTimeTaken: 5
+  Tolerance: 0.001
+  NumberOfCachedPositions: 5
+  distanceToMoveEpsilon: 0.001
 --- !u!64 &5158835116785052164
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -11808,6 +11937,10 @@ MonoBehaviour:
   speed: 500
   myAB: {fileID: 0}
   myABArmControllerComponent: {fileID: 0}
+  MaxTimeTaken: 5
+  Tolerance: 0.001
+  NumberOfCachedPositions: 5
+  distanceToMoveEpsilon: 0.001
 --- !u!1 &5158835117187801321
 GameObject:
   m_ObjectHideFlags: 0
@@ -12585,6 +12718,10 @@ MonoBehaviour:
   speed: 3
   myAB: {fileID: 0}
   myABArmControllerComponent: {fileID: 0}
+  MaxTimeTaken: 5
+  Tolerance: 0.00001
+  NumberOfCachedPositions: 5
+  distanceToMoveEpsilon: 0.001
 --- !u!4 &5158835117633502576
 Transform:
   m_ObjectHideFlags: 0
@@ -13251,3 +13388,7 @@ MonoBehaviour:
   speed: 3
   myAB: {fileID: 0}
   myABArmControllerComponent: {fileID: 0}
+  MaxTimeTaken: 5
+  Tolerance: 0.001
+  NumberOfCachedPositions: 5
+  distanceToMoveEpsilon: 0.001

@@ -72,25 +72,32 @@ public class TestABArmController : MonoBehaviour
     //callback that runs on loop when H or N keys are pressed to lift or lower arm rig
     public void OnMoveArmLift(InputAction.CallbackContext context)
     {
-
-        if(joints[0].robotPart == null) {
-            throw new ArgumentException("Yo its null, please make not null");
-        }
-
-        TestABArmJointController lift = joints[0].robotPart;
-        //get direction based on input
-        var input = context.ReadValue<float>();
-
-        //mimic old api by sending a single action to move a set distance
-        if(controlMode == ABControlMode.Actions) 
+        if(context.started == true)
         {
-            lift.ControlJointFromAction(joints[0].JointDistanceToMove * input);
-        }
+            if(joints[0].robotPart == null) {
+                throw new ArgumentException("Yo its null, please make not null");
+            }
 
-        //continuously move as long as keyboard input is pressed down
-        else if(controlMode == ABControlMode.Keyboard_Input)
-        {
-            lift.SetArmLiftState(LiftStateFromInput(input));
+            TestABArmJointController lift = joints[0].robotPart;
+            //get direction based on input
+            var input = context.ReadValue<float>();
+
+            //mimic old api by sending a single action to move a set distance
+            if(controlMode == ABControlMode.Actions) 
+            {
+                //lift.ControlJointFromAction(joints[0].JointDistanceToMove * input);
+
+                //pass in the direction and total distance we want to move
+                if(lift.liftState == ArmLiftState.Idle)
+                //Debug.Log(joints[0].JointDistanceToMove * input);
+                lift.PrepToControlJointFromAction(joints[0].JointDistanceToMove * input);
+            }
+
+            //continuously move as long as keyboard input is pressed down
+            else if(controlMode == ABControlMode.Keyboard_Input)
+            {
+                lift.SetArmLiftState(LiftStateFromInput(input));
+            }
         }
     }
 

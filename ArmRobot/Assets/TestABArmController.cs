@@ -15,7 +15,7 @@ public class TestABArmController : MonoBehaviour
     public struct Joint
     {
         public TestABArmJointController joint;
-        //public float JointDistanceToMove;
+        //leaving room in this struct in case we ever need to annotate more stuff per joint
     }
 
     public Joint[] joints;
@@ -29,6 +29,7 @@ public class TestABArmController : MonoBehaviour
         }
     }
 
+    //Server Action format to move the base of the arm up
     public void MoveArmBaseUp (float distance, float speed, float tolerance, float maxTimePassed, int positionCacheSize)
     {
         MoveArmBase(                    
@@ -41,6 +42,7 @@ public class TestABArmController : MonoBehaviour
         );
     }
 
+    //server action format to move the base of the arm down
     public void MoveArmBaseDown (float distance, float speed, float tolerance, float maxTimePassed, int positionCacheSize)
     {
         MoveArmBase(                    
@@ -53,6 +55,7 @@ public class TestABArmController : MonoBehaviour
         );
     }
 
+    //actually send the arm parameters to the joint moving up/down and begin movement
     public void MoveArmBase (float distance, float speed, float tolerance, float maxTimePassed, int positionCacheSize, int direction)
     {
         //create a set of movement params for how we are about to move
@@ -67,7 +70,6 @@ public class TestABArmController : MonoBehaviour
 
         TestABArmJointController liftJoint = joints[0].joint;
         liftJoint.PrepToControlJointFromAction(amp);
-
     }
 
     //callback that runs on loop when H or N keys are pressed to lift or lower arm rig

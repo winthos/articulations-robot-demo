@@ -129,10 +129,10 @@ public class TestABArmJointController : MonoBehaviour
                 //cache the position at the moment
                 currentArmMoveParams.cachedPositions[currentArmMoveParams.oldestCachedIndex] = currentPosition;
 
-                Debug.Log($"initialPosition: {currentArmMoveParams.initialJointPosition}");
+                //Debug.Log($"initialPosition: {currentArmMoveParams.initialJointPosition}");
 
                 var distanceMovedSoFar = Mathf.Abs(currentPosition - currentArmMoveParams.initialJointPosition);
-                Debug.Log($"distance moved so far is: {distanceMovedSoFar}");
+                //Debug.Log($"distance moved so far is: {distanceMovedSoFar}");
 
                 //iterate next index in cache, loop back to index 0 as we get newer positions
                 currentArmMoveParams.oldestCachedIndex = (currentArmMoveParams.oldestCachedIndex + 1) % currentArmMoveParams.positionCacheSize;
@@ -153,7 +153,6 @@ public class TestABArmJointController : MonoBehaviour
                         return;
                     }
                 }
-
 
                 if(distanceMovedSoFar >= currentArmMoveParams.distance)
                 {

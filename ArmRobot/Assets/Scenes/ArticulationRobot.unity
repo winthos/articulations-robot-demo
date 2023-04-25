@@ -10657,7 +10657,7 @@ ArticulationBody:
     targetVelocity: 0
   m_ZDrive:
     lowerLimit: 0
-    upperLimit: 0.129
+    upperLimit: 0.116
     stiffness: 100000
     damping: 9000
     forceLimit: 50
@@ -10682,16 +10682,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 1
-  rotateState: 0
-  liftState: 0
-  extendState: 0
-  speed: 3
   myAB: {fileID: 0}
   myABArmControllerComponent: {fileID: 0}
-  MaxTimeTaken: 5
-  Tolerance: 0.001
-  NumberOfCachedPositions: 5
-  distanceToMoveEpsilon: 0.001
 --- !u!64 &5158835116365451562
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -10979,7 +10971,7 @@ ArticulationBody:
     targetVelocity: 0
   m_ZDrive:
     lowerLimit: 0
-    upperLimit: 0.151
+    upperLimit: 0.138
     stiffness: 100000
     damping: 9000
     forceLimit: 50
@@ -11004,16 +10996,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 1
-  rotateState: 0
-  liftState: 0
-  extendState: 0
-  speed: 3
   myAB: {fileID: 0}
   myABArmControllerComponent: {fileID: 0}
-  MaxTimeTaken: 5
-  Tolerance: 0.001
-  NumberOfCachedPositions: 5
-  distanceToMoveEpsilon: 0.001
 --- !u!64 &5158835116607587604
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -11336,7 +11320,7 @@ ArticulationBody:
     targetVelocity: 0
   m_ZDrive:
     lowerLimit: 0
-    upperLimit: 0.178
+    upperLimit: 0.165
     stiffness: 100000
     damping: 9000
     forceLimit: 50
@@ -11361,16 +11345,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 1
-  rotateState: 0
-  liftState: 0
-  extendState: 0
-  speed: 3
   myAB: {fileID: 0}
   myABArmControllerComponent: {fileID: 0}
-  MaxTimeTaken: 5
-  Tolerance: 0.001
-  NumberOfCachedPositions: 5
-  distanceToMoveEpsilon: 0.001
 --- !u!64 &5158835116785052164
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -11931,16 +11907,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 3
-  rotateState: 0
-  liftState: 0
-  extendState: 0
-  speed: 500
   myAB: {fileID: 0}
   myABArmControllerComponent: {fileID: 0}
-  MaxTimeTaken: 5
-  Tolerance: 0.001
-  NumberOfCachedPositions: 5
-  distanceToMoveEpsilon: 0.001
 --- !u!1 &5158835117187801321
 GameObject:
   m_ObjectHideFlags: 0
@@ -12712,16 +12680,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 2
-  rotateState: 0
-  liftState: 0
-  extendState: 0
-  speed: 3
   myAB: {fileID: 0}
   myABArmControllerComponent: {fileID: 0}
-  MaxTimeTaken: 5
-  Tolerance: 0.00001
-  NumberOfCachedPositions: 5
-  distanceToMoveEpsilon: 0.001
 --- !u!4 &5158835117633502576
 Transform:
   m_ObjectHideFlags: 0
@@ -13200,20 +13160,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e89aca14150bd74eadd228319fd46ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  controlMode: 1
   joints:
-  - robotPart: {fileID: 5158835117633502543}
-    JointDistanceToMove: 0.5
-  - robotPart: {fileID: 5158835117675887873}
-    JointDistanceToMove: 0.2
-  - robotPart: {fileID: 5158835116365451561}
-    JointDistanceToMove: 0.2
-  - robotPart: {fileID: 5158835116607587603}
-    JointDistanceToMove: 0.2
-  - robotPart: {fileID: 5158835116785052163}
-    JointDistanceToMove: 0.2
-  - robotPart: {fileID: 5158835117057418593}
-    JointDistanceToMove: 0.2
+  - joint: {fileID: 5158835117633502543}
+  - joint: {fileID: 5158835117675887873}
+  - joint: {fileID: 5158835116365451561}
+  - joint: {fileID: 5158835116607587603}
+  - joint: {fileID: 5158835116785052163}
+  - joint: {fileID: 5158835117057418593}
 --- !u!33 &5158835117675887842
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -13357,7 +13310,7 @@ ArticulationBody:
     targetVelocity: 0
   m_ZDrive:
     lowerLimit: 0
-    upperLimit: 0.11
+    upperLimit: 0.097
     stiffness: 100000
     damping: 9000
     forceLimit: 50
@@ -13382,13 +13335,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 1
-  rotateState: 0
-  liftState: 0
-  extendState: 0
-  speed: 3
   myAB: {fileID: 0}
   myABArmControllerComponent: {fileID: 0}
-  MaxTimeTaken: 5
-  Tolerance: 0.001
-  NumberOfCachedPositions: 5
-  distanceToMoveEpsilon: 0.001

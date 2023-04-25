@@ -9,94 +9,92 @@ public enum ABControlMode {Keyboard_Input, Actions};
 public class TestABArmController : MonoBehaviour
 {
     [SerializeField]
-    public ABControlMode controlMode = ABControlMode.Keyboard_Input;
+    //public ABControlMode controlMode = ABControlMode.Keyboard_Input;
 
     [System.Serializable]
     public struct Joint
     {
-        public TestABArmJointController robotPart;
-        public float JointDistanceToMove;
+        public TestABArmJointController joint;
+        //public float JointDistanceToMove;
     }
 
     public Joint[] joints;
 
     void Start()
     {
-        //myAB = GetComponent<ArticulationBody>();
+        //assign this controller as a reference in all joints
         foreach (Joint j in joints)
         {
-            j.robotPart.GetComponent<TestABArmJointController>().myABArmControllerComponent = this.GetComponent<TestABArmController>();
+            j.joint.GetComponent<TestABArmJointController>().myABArmControllerComponent = this.GetComponent<TestABArmController>();
         }
     }
 
-    private void Update()
+    public void MoveArmBaseUp (float distance, float speed, float tolerance, float maxTimePassed, int positionCacheSize)
     {
-        // if(Input.GetKeyDown(KeyCode.Space))
-        // {
-        //     ActionMoveArmLiftUp(1f, 1.0f);
-        // }
+        MoveArmBase(                    
+            distance: distance,
+            speed: speed,
+            tolerance: tolerance,
+            maxTimePassed: maxTimePassed,
+            positionCacheSize: positionCacheSize,
+            direction: 1 //going up
+        );
     }
 
-    // public void ActionMoveArmLiftUp(float distance, float speed)
-    // {
-    //     if(controlMode != ABControlMode.Actions)
-    //     {
-    //         return;
-    //     }
+    public void MoveArmBaseDown (float distance, float speed, float tolerance, float maxTimePassed, int positionCacheSize)
+    {
+        MoveArmBase(                    
+            distance: distance,
+            speed: speed,
+            tolerance: tolerance,
+            maxTimePassed: maxTimePassed,
+            positionCacheSize: positionCacheSize,
+            direction: -1 //going down
+        );
+    }
 
-    //     TestABArmJointController lift = joints[0].robotPart;
+    public void MoveArmBase (float distance, float speed, float tolerance, float maxTimePassed, int positionCacheSize, int direction)
+    {
+        //create a set of movement params for how we are about to move
+        ArmMoveParams amp = new ArmMoveParams{
+            distance = distance,
+            speed = speed,
+            tolerance = tolerance,
+            maxTimePassed = maxTimePassed,
+            positionCacheSize = positionCacheSize,
+            direction = direction 
+        };
 
-    //     //pre calculate all the things we need for physics
-    //     var totalTimeNeededToReachDistanceAtSomeSpeed = distance/speed;
-    //     Debug.Log($"totalTimeNeededToReachDistanceAtSomeSpeed: {totalTimeNeededToReachDistanceAtSomeSpeed}");
+        TestABArmJointController liftJoint = joints[0].joint;
+        liftJoint.PrepToControlJointFromAction(amp);
 
-    //     var totalNumberOfTimeSteps = totalTimeNeededToReachDistanceAtSomeSpeed / Time.fixedDeltaTime;
-    //     Debug.Log($"totalNumberOfTimeSteps: {totalNumberOfTimeSteps}");
-
-    //     var distanceToChangeWithEachTimeStep = distance/totalNumberOfTimeSteps;
-    //     Debug.Log($"distanceToChangeWithEachTimeStep: {distanceToChangeWithEachTimeStep}");
-
-    //     lift.currentArmMoveParams = new ArmMoveParams()
-    //     {
-    //         distance = distance,
-    //         speed = speed,
-    //         timeTakenSoFar = 0.0f,
-    //         totalTimeNeededToReachDistanceAtSomeSpeed = totalTimeNeededToReachDistanceAtSomeSpeed,
-    //         totalNumberOfTimeSteps = totalNumberOfTimeSteps,
-    //         distanceToChangeWithEachTimeStep = distanceToChangeWithEachTimeStep
-    //     };
-
-    //     lift.SetArmLiftState(ArmLiftState.MovingUp);
-    // }
+    }
 
     //callback that runs on loop when H or N keys are pressed to lift or lower arm rig
     public void OnMoveArmLift(InputAction.CallbackContext context)
     {
         if(context.started == true)
         {
-            if(joints[0].robotPart == null) {
-                throw new ArgumentException("Yo its null, please make not null");
+            if(LiftStateFromInput(context.ReadValue<float>()) == ArmLiftState.MovingUp)
+            {
+                MoveArmBaseUp(
+                    distance: 0.5f,
+                    speed: 4.0f,
+                    tolerance: 1e-3f,
+                    maxTimePassed: 5.0f,
+                    positionCacheSize: 10
+                );
             }
 
-            TestABArmJointController lift = joints[0].robotPart;
-            //get direction based on input
-            var input = context.ReadValue<float>();
-
-            //mimic old api by sending a single action to move a set distance
-            if(controlMode == ABControlMode.Actions) 
+            else if(LiftStateFromInput(context.ReadValue<float>()) == ArmLiftState.MovingDown)
             {
-                //lift.ControlJointFromAction(joints[0].JointDistanceToMove * input);
-
-                //pass in the direction and total distance we want to move
-                if(lift.liftState == ArmLiftState.Idle)
-                //Debug.Log(joints[0].JointDistanceToMove * input);
-                lift.PrepToControlJointFromAction(joints[0].JointDistanceToMove * input);
-            }
-
-            //continuously move as long as keyboard input is pressed down
-            else if(controlMode == ABControlMode.Keyboard_Input)
-            {
-                lift.SetArmLiftState(LiftStateFromInput(input));
+                MoveArmBaseDown(
+                    distance: 0.5f,
+                    speed: 4.0f,
+                    tolerance: 1e-3f,
+                    maxTimePassed: 5.0f,
+                    positionCacheSize: 10
+                );
             }
         }
     }
@@ -120,45 +118,36 @@ public class TestABArmController : MonoBehaviour
 
     public void OnMoveArmJoint1(InputAction.CallbackContext context) 
     {
-        if(controlMode != ABControlMode.Keyboard_Input) 
-        {
-            return;
-        }
 
-        if(joints[1].robotPart == null) {
+
+        if(joints[1].joint == null) {
             throw new ArgumentException("Yo its null, please make not null");
         }
-        TestABArmJointController joint = joints[1].robotPart;
+        TestABArmJointController joint = joints[1].joint;
         var input = context.ReadValue<float>();
         joint.SetArmExtendState(ExtendStateFromInput(input));
     }
 
     public void OnMoveArmJoint2(InputAction.CallbackContext context) 
     {
-        if(controlMode != ABControlMode.Keyboard_Input) 
-        {
-            return;
-        }
 
-        if(joints[2].robotPart == null) {
+
+        if(joints[2].joint == null) {
             throw new ArgumentException("Yo its null, please make not null");
         }
-        TestABArmJointController joint = joints[2].robotPart;
+        TestABArmJointController joint = joints[2].joint;
         var input = context.ReadValue<float>();
         joint.SetArmExtendState(ExtendStateFromInput(input));
     }
 
     public void OnMoveArmJoint3(InputAction.CallbackContext context) 
     {
-        if(controlMode != ABControlMode.Keyboard_Input) 
-        {
-            return;
-        }
 
-        if(joints[3].robotPart == null) {
+
+        if(joints[3].joint == null) {
             throw new ArgumentException("Yo its null, please make not null");
         }
-        TestABArmJointController joint = joints[3].robotPart;
+        TestABArmJointController joint = joints[3].joint;
         var input = context.ReadValue<float>();
         joint.SetArmExtendState(ExtendStateFromInput(input));
 
@@ -166,15 +155,12 @@ public class TestABArmController : MonoBehaviour
 
     public void OnMoveArmJoint4(InputAction.CallbackContext context) 
     {
-        if(controlMode != ABControlMode.Keyboard_Input) 
-        {
-            return;
-        }
 
-        if(joints[4].robotPart == null) {
+
+        if(joints[4].joint == null) {
             throw new ArgumentException("Yo its null, please make not null");
         }
-        TestABArmJointController joint = joints[4].robotPart;
+        TestABArmJointController joint = joints[4].joint;
         var input = context.ReadValue<float>();
         joint.SetArmExtendState(ExtendStateFromInput(input));
 
@@ -201,15 +187,11 @@ public class TestABArmController : MonoBehaviour
 
     public void OnMoveArmWrist(InputAction.CallbackContext context)
     {
-        if(controlMode != ABControlMode.Keyboard_Input) 
-        {
-            return;
-        }
         
-        if(joints[5].robotPart == null) {
+        if(joints[5].joint == null) {
             throw new ArgumentException("Yo its null, please make not null");
         }
-        TestABArmJointController joint = joints[5].robotPart;
+        TestABArmJointController joint = joints[5].joint;
         var input = context.ReadValue<float>();
         joint.SetArmRotateState(RotateStateFromInput(input));
     }

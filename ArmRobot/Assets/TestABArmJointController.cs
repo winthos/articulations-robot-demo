@@ -10,22 +10,33 @@ public enum JointAxisType {Unassigned, Extend, Lift, Rotate};
 
 public class ArmMoveParams
 {
+    //distance to move either in meters or radians?
     public float distance;
     public float speed;
-    public float timeTakenSoFar;
-    public float totalTimeNeededToReachDistanceAtSomeSpeed;
-    public float totalNumberOfTimeSteps;
-    public float distanceToChangeWithEachTimeStep;
-    public float lastTargetPosition;
+    public float tolerance;
+    public float maxTimePassed;
+    public int positionCacheSize;
+
+    //these are used during movement in fixed update
+    public int direction;
+    public float timePassed = 0.0f;
+    public float[] cachedPositions;
+    public int oldestCachedIndex;
+    public float initialJointPosition;
 }
 
 public class TestABArmJointController : MonoBehaviour
 {
+    [Header("What kind of joint is this?")]
     public JointAxisType jointAxisType = JointAxisType.Unassigned;
-    public ArmRotateState rotateState = ArmRotateState.Idle;
-    public ArmLiftState liftState = ArmLiftState.Idle;
-    public ArmExtendState extendState = ArmExtendState.Idle;
-    public ArmMoveParams currentArmMoveParams;
+
+    [Header("State of this joint's movements")]
+    private ArmRotateState rotateState = ArmRotateState.Idle;
+    private ArmLiftState liftState = ArmLiftState.Idle;
+    private ArmExtendState extendState = ArmExtendState.Idle;
+
+    //pass in arm move parameters for Action based movement
+    private ArmMoveParams currentArmMoveParams;
 
     public void SetArmLiftState(ArmLiftState armState)
     {
@@ -42,22 +53,9 @@ public class TestABArmJointController : MonoBehaviour
         rotateState = armState;
     } 
 
-    public float speed = 1.0f;
+    private float keyboardInputSpeed = 1.0f;
     public ArticulationBody myAB;
     public TestABArmController myABArmControllerComponent;
-
-    public float MaxTimeTaken = 5.0f;
-    private float timeTaken = 0.0f;
-    public float Tolerance = 1e-3f;
-    public int NumberOfCachedPositions = 5;
-    private float[] cachedPositions;
-    private float[] cachedDistanceMagnitudes;
-    private int oldestCachedIndex;
-    private float distanceToMove;
-    //public float distanceToMoveEpsilon= 1e-1f;
-    private float initialPosition;
-
-    private float distanceToRotate;
 
     void Start() 
     {
@@ -71,9 +69,9 @@ public class TestABArmJointController : MonoBehaviour
     }
 
     //do all this stuff once before we start moving this body
-    public void PrepToControlJointFromAction(float distance)
+    public void PrepToControlJointFromAction(ArmMoveParams armMoveParams)
     {
-        if(Mathf.Approximately(distance, 0.0f))
+        if(Mathf.Approximately(armMoveParams.distance, 0.0f))
         {
             Debug.Log("Error! distance to move must be nonzero");
             return;
@@ -84,32 +82,27 @@ public class TestABArmJointController : MonoBehaviour
         {
             if(liftState == ArmLiftState.Idle)
             {
-                //zero out the distanceToMove
-                distanceToMove = Mathf.Abs(distance);
-                Debug.Log($"distance to move is: {distanceToMove}");
-                //clear out the position cache
-                cachedPositions = new float[NumberOfCachedPositions];
-                cachedDistanceMagnitudes = new float[NumberOfCachedPositions];
-                //clear out time taken
-                timeTaken = 0.0f;
-                oldestCachedIndex = 0;
-                initialPosition = myAB.jointPosition[0];
+                //set current arm move params to prep for movement in fixed update
+                currentArmMoveParams = armMoveParams;
+
+                //initialize the buffer to cache positions to check for later
+                currentArmMoveParams.cachedPositions = new float[currentArmMoveParams.positionCacheSize];
+                
+                //snapshot the initial joint position to compare with later during movement
+                currentArmMoveParams.initialJointPosition = myAB.jointPosition[0];
 
                 //set if we are moving up or down based on sign of distance from input
-                if(distance < 0)
+                if(armMoveParams.direction < 0)
                 {
                     Debug.Log("setting lift state to move down");
                     liftState = ArmLiftState.MovingDown;
                 }
 
-                else
+                else if(armMoveParams.direction > 0)
                 {
                     Debug.Log("setting lift state to move up");
                     liftState = ArmLiftState.MovingUp;
                 }
-
-                //now that lift state is set, on next fixed update
-                //ControlJointFromAction will start updating the drive position
             }
         }
     }
@@ -123,66 +116,58 @@ public class TestABArmJointController : MonoBehaviour
             //if instead we are moving up or down actively
             if(liftState != ArmLiftState.Idle)
             {
+                //moving up/down so get the yDrive
                 var drive = myAB.yDrive;
-                float yDrivePosition = myAB.jointPosition[0];
-                float targetPosition = yDrivePosition + (float)liftState * Time.fixedDeltaTime * speed;    
-                //Debug.Log(targetPosition);            
-                drive.target = targetPosition;
-                myAB.yDrive = drive;      
-
-                //now cache and check positions based on some tolerance value or iterate time out
-                //see if we are close to the distanceToMove
-                var currentPosition = yDrivePosition;
+                float currentPosition = myAB.jointPosition[0];
                 Debug.Log($"currentPosition: {currentPosition}");
+                float targetPosition = currentPosition + (float)liftState * Time.fixedDeltaTime * keyboardInputSpeed;    
+                drive.target = targetPosition;
+                //this sets the drive to begin moving to the new target position
+                myAB.yDrive = drive;     
+
+                //begin checks to see if we have stopped moving or if we need to stop moving
                 //cache the position at the moment
-                cachedPositions[oldestCachedIndex] = currentPosition;
+                currentArmMoveParams.cachedPositions[currentArmMoveParams.oldestCachedIndex] = currentPosition;
 
-                Debug.Log($"initialPosition: {initialPosition}");
+                Debug.Log($"initialPosition: {currentArmMoveParams.initialJointPosition}");
 
-                var distanceMovedSoFar = Mathf.Abs(currentPosition - initialPosition);
+                var distanceMovedSoFar = Mathf.Abs(currentPosition - currentArmMoveParams.initialJointPosition);
                 Debug.Log($"distance moved so far is: {distanceMovedSoFar}");
 
-                //iterate next index in cache
-                oldestCachedIndex = (oldestCachedIndex + 1) % NumberOfCachedPositions;
+                //iterate next index in cache, loop back to index 0 as we get newer positions
+                currentArmMoveParams.oldestCachedIndex = (currentArmMoveParams.oldestCachedIndex + 1) % currentArmMoveParams.positionCacheSize;
 
-                //if we have looped around at least once, now start checking
-                if(oldestCachedIndex == 0)
+                //every time we loop back around the cached positions, check if we effectively stopped moving
+                if(currentArmMoveParams.oldestCachedIndex == 0)
                 {
-                    cachedPositions[oldestCachedIndex] = currentPosition;
+                    //go ahead and update index 0 super quick so we don't miss it
+                    currentArmMoveParams.cachedPositions[currentArmMoveParams.oldestCachedIndex] = currentPosition;
+                    
                     //compare the distance from current position to the target position (distanceToMove)
                     //for the last {NumberOfCachedPositions} positions, and if that amount hasn't changed
                     //by the {tolerance} deviation then we have stopped moving
-                    if(CheckArrayWithinStandardDeviation(cachedPositions, Tolerance))
+                    if(CheckArrayWithinStandardDeviation(currentArmMoveParams.cachedPositions, currentArmMoveParams.tolerance))
                     {
-                        Debug.Log($"last {NumberOfCachedPositions} positions were about the same");
+                        Debug.Log($"last {currentArmMoveParams.positionCacheSize} positions were within tolerance, stop moving now!");
                         liftState = ArmLiftState.Idle;
+                        return;
                     }
                 }
 
 
-                if(distanceMovedSoFar >= distanceToMove)
+                if(distanceMovedSoFar >= currentArmMoveParams.distance)
                 {
                     Debug.Log("we have moved to or a little beyond the distance specified to move so STOOOP");
                     liftState = ArmLiftState.Idle;
+                    return;
                 }
                 
-
-                //also check if we actually reached close to the target position becuase that means
-                //we got there unobstructed
-
-                //this one seems to miss the check because sometimes the difference between this and last fixed update is greater
-                //than the epsilon so uhhhhhhhhhhhhh
-                // if(CheckIfDistanceMagnitudesAreCloseToDistanceToMove(distanceMovedSoFar, distanceToMove, distanceToMoveEpsilon))
-                // {
-                //     Debug.Log($"distance reached");
-                //     liftState = ArmLiftState.Idle;
-                // }
-                
                 //otherwise we have a hard timer to stop movement so we don't move forever and crash unity
-                timeTaken += Time.deltaTime;
+                currentArmMoveParams.timePassed += Time.deltaTime;
 
-                if(timeTaken >= MaxTimeTaken)
+                if(currentArmMoveParams.timePassed >= currentArmMoveParams.maxTimePassed)
                 {
+                    Debug.Log($"{currentArmMoveParams.timePassed} seconds have passed. Time out happening, stop moving!");
                     liftState = ArmLiftState.Idle;
                     return;
                 }
@@ -192,57 +177,7 @@ public class TestABArmJointController : MonoBehaviour
         }
     }
 
-
-    //how to determine if we have "reached target succesfully"
-    // compare velocity? if it hasn't changed or reached zero, we have stopped moving
-    // compare target position and current joint position? If close enough, we have reached target
-    // some sort of time based check, calculate how long it would take to move to target and time out?
-    // private IEnumerator AreWeDoneMoving()
-    // {
-    //     float timePassed = 0;
-    //     //float lastVelocityMagnitude = 0f;
-    //     float[] cachedVelocities = new float[NumberOfCachedVelocities];
-    //     int oldestCachedIndex = 0;
-
-    //     while(liftState != ArmLiftState.Idle)
-    //     {   
-    //         yield return new WaitForFixedUpdate();
-    //         timePassed += Time.deltaTime;
-
-    //         var currentVelocityMagnitude = myAB.velocity.magnitude;
-
-    //         cachedVelocities[oldestCachedIndex] = currentVelocityMagnitude;
-    //         //update the last cached velocities up to the max number we wanted to cache
-    //         oldestCachedIndex = (oldestCachedIndex + 1) % NumberOfCachedVelocities;
-
-    //         //update the oldest index updated in the cached velocities I guess????
-    //         if(oldestCachedIndex == 0)
-    //         {
-    //             cachedVelocities[oldestCachedIndex] = currentVelocityMagnitude;
-    //         }
-
-    //         //compare all cached velocities to see if they are all within the threshold
-    //         if(CheckArrayWithinStandardDeviation(cachedVelocities, Tolerance))
-    //         {
-    //             Debug.Log($"last {NumberOfCachedVelocities} velocities were within tolerence: {Tolerance}");
-    //             liftState = ArmLiftState.Idle;
-    //         }
-
-    //         //hard timeout check in case for some reason the cached velocity comparisons go infinite
-    //         if(timePassed >= TimeOut)
-    //         {
-    //             Debug.Log("hard time out check happened");
-    //             liftState = ArmLiftState.Idle;
-    //         }
-
-    //         Debug.Log(myAB.jointPosition[0]);
-    //         Debug.Log(myAB.yDrive.target);
-    //     }
-
-    //     Debug.Log("done moving!");
-    //     yield return null;
-    // }
-
+    //check if all values in the array are within a standard deviation or not
     bool CheckArrayWithinStandardDeviation(float[] values, float standardDeviation)
     {
         // Calculate the mean value of the array
@@ -263,136 +198,16 @@ public class TestABArmJointController : MonoBehaviour
         return arrayStdDev <= standardDeviation;
     }
 
+    //maybe we don't need this but imma leave it here for now
     bool CheckIfDistanceMagnitudesAreCloseToDistanceToMove(float distanceMovedSoFar, float distanceToMove, float epsilon)
     {
         var diff = Mathf.Abs(distanceToMove - distanceMovedSoFar);
         return diff <= epsilon || diff <= Mathf.Max(Mathf.Abs(distanceToMove), Mathf.Abs(distanceMovedSoFar)) * epsilon;
     }
 
-    //this is called every fixed update
-    private void ControlJointFromKeyboardInput()
-    {
-        //raise and lower along the Y axis
-        if(jointAxisType == JointAxisType.Lift) 
-        {
-            if (liftState != ArmLiftState.Idle)
-            {
-                //get jointPosition along y axis
-                float yDrivePostion = myAB.jointPosition[0];
-                //Debug.Log(xDrivePostion);
-
-                //increment this y position
-                //speed = dist/time
-                //so time.fixedDelta * (m/s), results in some distance position change
-                float targetPosition = yDrivePostion + (float)liftState * Time.fixedDeltaTime * speed;
-
-                //set joint Drive to new position
-                var drive = myAB.yDrive;
-                drive.target = targetPosition;
-                myAB.yDrive = drive;
-            }
-        }
-
-        //extend and move forward along the Z axis
-        else if(jointAxisType == JointAxisType.Extend) 
-        {
-            if(extendState != ArmExtendState.Idle) 
-            {
-                //get jointPosition along y axis
-                float zDrivePostion = myAB.jointPosition[0];
-                //Debug.Log(zDrivePostion);
-
-                //increment this y position
-                float targetPosition = zDrivePostion + (float)extendState * Time.fixedDeltaTime * speed;
-
-                //set joint Drive to new position
-                var drive = myAB.zDrive;
-                drive.target = targetPosition;
-                myAB.zDrive = drive;
-            }
-        }
-
-        //rotate about the Y axis
-        else if (jointAxisType == JointAxisType.Rotate) 
-        {
-            if(rotateState != ArmRotateState.Idle)
-            {
-                //note the {speed} for rotation seems to need to scale due to it being in radians/rotational degrees
-                //so at least for testing at the moment the "speed" value of the wrist is really high
-                float rotationChange = (float)rotateState * speed * Time.fixedDeltaTime;
-                float rotationGoal = CurrentPrimaryAxisRotation() + rotationChange;
-                RotateTo(rotationGoal);
-            }
-        }
-    }
-
-    // private int count = 0;
-
-    // private void ControlJointFromAction()
-    // {
-    //     if (currentArmMoveParams.timeTakenSoFar < currentArmMoveParams.totalTimeNeededToReachDistanceAtSomeSpeed)
-    //     {
-    //         //Debug.Log($"time taken moving so far: {currentArmMoveParams.timeTakenSoFar}");
-    //         float yDrivePosition = myAB.jointPosition[0];
-    //         Debug.Log($"yDrivePosition: {yDrivePosition}");
-
-    //         var drive = myAB.yDrive;
-
-    //         //ok we haven't reached the last set target position yet, so skip
-    //         if(yDrivePosition < currentArmMoveParams.lastTargetPosition)
-    //         {
-    //             Debug.Log("in second loop");
-    //             drive.target = currentArmMoveParams.lastTargetPosition;
-    //             myAB.yDrive = drive;
-
-    //             currentArmMoveParams.timeTakenSoFar += Time.deltaTime;
-    //             count++;
-    //             return;
-    //         }
-
-    //         //set the new target position we want this body to reach
-    //         float targetPosition = yDrivePosition + currentArmMoveParams.distanceToChangeWithEachTimeStep;
-
-    //         currentArmMoveParams.lastTargetPosition = targetPosition;
-
-    //         //ok all this sets the drive to move toward the current targetPosition
-    //         drive.target = targetPosition;
-    //         myAB.yDrive = drive;
-
-    //         currentArmMoveParams.timeTakenSoFar += Time.deltaTime;
-    //         count++;
-    //         Debug.Log($"count of fixed updates: {count}");
-    //     }
-
-    //     else
-    //     {
-    //         //we have finished moving to the target position so set arm to idle and stop moving
-    //         SetArmLiftState(ArmLiftState.Idle);
-    //     }
-    // }
-
     private void FixedUpdate()
     { 
-        //keyboard input
-        if(myABArmControllerComponent.controlMode == ABControlMode.Keyboard_Input)
-        {
-            ControlJointFromKeyboardInput();
-        }
-
-        if(myABArmControllerComponent.controlMode == ABControlMode.Actions)
-        {
-            ControlJointFromAction();
-        }
-
-        //action input, pass in direction, speed, etc
-        // else if(myABArmControllerComponent.controlMode == ABControlMode.Actions)
-        // {
-        //     if(liftState != ArmLiftState.Idle)
-        //     {
-        //         //Debug.Log("try to move arm lift up with action");
-        //         ControlJointFromAction();
-        //     }
-        // }
+        ControlJointFromAction();
     }
 
     // MOVEMENT HELPERS for rotate

@@ -31,8 +31,11 @@ public class TestABArmJointController : MonoBehaviour
     public JointAxisType jointAxisType = JointAxisType.Unassigned;
 
     [Header("State of this joint's movements")]
+    [SerializeField]
     private ArmRotateState rotateState = ArmRotateState.Idle;
+    [SerializeField]
     private ArmLiftState liftState = ArmLiftState.Idle;
+    [SerializeField]
     private ArmExtendState extendState = ArmExtendState.Idle;
 
     //pass in arm move parameters for Action based movement
@@ -53,7 +56,6 @@ public class TestABArmJointController : MonoBehaviour
         rotateState = armState;
     } 
 
-    private float keyboardInputSpeed = 1.0f;
     public ArticulationBody myAB;
     public TestABArmController myABArmControllerComponent;
 
@@ -77,7 +79,7 @@ public class TestABArmJointController : MonoBehaviour
             return;
         }
 
-        //we are a lift type joint
+        //we are a lift type joint, moving along the local y axis
         if(jointAxisType == JointAxisType.Lift)
         {
             if(liftState == ArmLiftState.Idle)
@@ -105,6 +107,35 @@ public class TestABArmJointController : MonoBehaviour
                 }
             }
         }
+
+        //we are an extending joint, moving along the local z axis
+        else if (jointAxisType == JointAxisType.Extend)
+        {
+            if(extendState == ArmExtendState.Idle)
+            {
+                //set current arm move params to prep for movement in fixed update
+                currentArmMoveParams = armMoveParams;
+
+                //initialize the buffer to cache positions to check for later
+                currentArmMoveParams.cachedPositions = new float[currentArmMoveParams.positionCacheSize];
+                
+                //snapshot the initial joint position to compare with later during movement
+                currentArmMoveParams.initialJointPosition = myAB.jointPosition[0];
+
+                //set if we are moving up or down based on sign of distance from input
+                if(armMoveParams.direction < 0)
+                {
+                    //Debug.Log("setting extend state to retracting");
+                    extendState = ArmExtendState.MovingBackward;
+                }
+
+                if(armMoveParams.direction > 0)
+                {
+                    //Debug.Log("setting extend state to extending");
+                    extendState = ArmExtendState.MovingForward;
+                }
+            }
+        }
     }
 
     //this is called once every frame update
@@ -120,7 +151,7 @@ public class TestABArmJointController : MonoBehaviour
                 var drive = myAB.yDrive;
                 float currentPosition = myAB.jointPosition[0];
                 Debug.Log($"currentPosition: {currentPosition}");
-                float targetPosition = currentPosition + (float)liftState * Time.fixedDeltaTime * keyboardInputSpeed;    
+                float targetPosition = currentPosition + (float)liftState * Time.fixedDeltaTime * currentArmMoveParams.speed;    
                 drive.target = targetPosition;
                 //this sets the drive to begin moving to the new target position
                 myAB.yDrive = drive;     
@@ -176,6 +207,66 @@ public class TestABArmJointController : MonoBehaviour
 
             //we are set to be in an idle state so return and do nothing
             return;
+        }
+
+        //for extending arm joints, don't set actionFinished here, instead we have a coroutine in the
+        //TestABArmController component that will check each arm joint to see if all arm joints have either
+        //finished moving their required distance, or if they have stopped moving, or if they have timed out
+        else if(jointAxisType == JointAxisType.Extend)
+        {
+            if(extendState != ArmExtendState.Idle)
+            {
+                var drive = myAB.zDrive;
+                float currentPosition = myAB.jointPosition[0];
+                float targetPosition = currentPosition + (float)extendState * Time.fixedDeltaTime * currentArmMoveParams.speed;    
+                drive.target = targetPosition;
+                myAB.zDrive = drive;
+            
+                //begin checks to see if we have stopped moving or if we need to stop moving
+                //cache the position at the moment
+                currentArmMoveParams.cachedPositions[currentArmMoveParams.oldestCachedIndex] = currentPosition;
+
+                //Debug.Log($"initialPosition: {currentArmMoveParams.initialJointPosition}");
+
+                var distanceMovedSoFar = Mathf.Abs(currentPosition - currentArmMoveParams.initialJointPosition);
+                //Debug.Log($"distance moved so far is: {distanceMovedSoFar}");
+
+                //iterate next index in cache, loop back to index 0 as we get newer positions
+                currentArmMoveParams.oldestCachedIndex = (currentArmMoveParams.oldestCachedIndex + 1) % currentArmMoveParams.positionCacheSize;
+
+                //every time we loop back around the cached positions, check if we effectively stopped moving
+                if(currentArmMoveParams.oldestCachedIndex == 0)
+                {
+                    //go ahead and update index 0 super quick so we don't miss it
+                    currentArmMoveParams.cachedPositions[currentArmMoveParams.oldestCachedIndex] = currentPosition;
+                    
+                    //for the last {NumberOfCachedPositions} positions, and if that amount hasn't changed
+                    //by the {tolerance} deviation then we have presumably stopped moving
+                    if(CheckArrayWithinStandardDeviation(currentArmMoveParams.cachedPositions, currentArmMoveParams.tolerance))
+                    {
+                        Debug.Log($"tolerance reached, distance {myAB} moved so far: {distanceMovedSoFar}");
+                        extendState = ArmExtendState.Idle;
+                        return;
+                    }
+                }
+
+                if(distanceMovedSoFar >= currentArmMoveParams.distance)
+                {
+                    Debug.Log($"max distance exceeded, distance {myAB} moved so far: {distanceMovedSoFar}");
+                    extendState = ArmExtendState.Idle;
+                    return;
+                }
+                
+                //otherwise we have a hard timer to stop movement so we don't move forever and crash unity
+                currentArmMoveParams.timePassed += Time.deltaTime;
+
+                if(currentArmMoveParams.timePassed >= currentArmMoveParams.maxTimePassed)
+                {
+                    Debug.Log($"max time passed, distance {myAB} moved so far: {distanceMovedSoFar}");
+                    extendState = ArmExtendState.Idle;
+                    return;
+                }
+            }
         }
     }
 

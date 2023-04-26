@@ -120,56 +120,136 @@ public class TestABArmController : MonoBehaviour
         }
     }
 
+    public void MoveArmForward(float distance, float speed, float tolerance, float maxTimePassed, int positionCacheSize)
+    {
+        ExtendArm(                    
+            distance: distance,
+            speed: speed,
+            tolerance: tolerance,
+            maxTimePassed: maxTimePassed,
+            positionCacheSize: positionCacheSize,
+            direction: 1 //extend forward
+        );
+    }
+
+    public void MoveArmBackward(float distance, float speed, float tolerance, float maxTimePassed, int positionCacheSize)
+    {
+        ExtendArm(                    
+            distance: distance,
+            speed: speed,
+            tolerance: tolerance,
+            maxTimePassed: maxTimePassed,
+            positionCacheSize: positionCacheSize,
+            direction: -1 //extend backward
+        );
+    }
+
+    public void ExtendArm(float distance, float speed, float tolerance, float maxTimePassed, int positionCacheSize, int direction)
+    {
+        //get references to each joint
+        TestABArmJointController joint1 = joints[1].joint;
+        TestABArmJointController joint2 = joints[2].joint;
+        TestABArmJointController joint3 = joints[3].joint;
+        TestABArmJointController joint4 = joints[4].joint;
+        //joint 5 is the wrist so don't do that here
+
+        float totalExtendDistance = GetDriveUpperLimit(joint1) + 
+                                    GetDriveUpperLimit(joint2) + 
+                                    GetDriveUpperLimit(joint3) + 
+                                    GetDriveUpperLimit(joint4);
+
+        Debug.Log($"attempting to extend arm a total of {distance}");
+        Debug.Log($"max extend distance is: {totalExtendDistance}");
+
+        Dictionary<TestABArmJointController, float> jointToArmDistanceRatios = new Dictionary<TestABArmJointController, float>();
+        Dictionary<TestABArmJointController, ArmMoveParams> jointToArmParams = new Dictionary<TestABArmJointController, ArmMoveParams>();
+
+        //get the ratio of the total amount of movement each joint should be responsible for
+        jointToArmDistanceRatios.Add(joint1, GetDriveUpperLimit(joint1)/totalExtendDistance);
+        jointToArmDistanceRatios.Add(joint2, GetDriveUpperLimit(joint2)/totalExtendDistance);
+        jointToArmDistanceRatios.Add(joint3, GetDriveUpperLimit(joint3)/totalExtendDistance);
+        jointToArmDistanceRatios.Add(joint4, GetDriveUpperLimit(joint4)/totalExtendDistance);
+
+        float total = 0.0f;
+
+        foreach (TestABArmJointController joint in jointToArmDistanceRatios.Keys)
+        {
+            //assign each joint the distance it needs to move to have the entire arm try and move the total `distance`
+            float myDistance = distance * jointToArmDistanceRatios[joint];
+            Debug.Log($"distance for {joint} is {myDistance}");
+
+            total += myDistance;
+
+            ArmMoveParams amp = new ArmMoveParams{
+                distance = myDistance,
+                speed = speed,
+                tolerance = tolerance,
+                maxTimePassed = maxTimePassed,
+                positionCacheSize = positionCacheSize,
+                direction = direction 
+            };
+
+            jointToArmParams.Add(joint, amp);
+        }
+
+        Debug.Log($"total distance adds up to be: {total}");
+        //set each joint in motion and in the fixed update we will track how much total distance has been moved
+        //with each joint. If all joints's individual distances add up to the `distance` then we have reached our target extension amount
+        foreach (TestABArmJointController joint in jointToArmParams.Keys)
+        {
+            joint.PrepToControlJointFromAction(jointToArmParams[joint]);
+        }
+
+    }
+
+    public float GetDriveUpperLimit(TestABArmJointController joint, JointAxisType jointAxisType = JointAxisType.Extend)
+    {
+        float upperLimit = 0.0f;
+
+        if(jointAxisType == JointAxisType.Extend)
+        {
+            //z drive
+            upperLimit = joint.myAB.zDrive.upperLimit;
+        }
+
+        if(jointAxisType == JointAxisType.Lift)
+        {
+            //y drive
+            upperLimit = joint.myAB.yDrive.upperLimit;
+        }
+
+        return upperLimit;
+    }
+
     public void OnMoveArmJoint1(InputAction.CallbackContext context) 
     {
+        if(context.started == true)
+        {
+            if(ExtendStateFromInput(context.ReadValue<float>()) == ArmExtendState.MovingForward)
+            {
+                //these parameters here act as if a researcher has put them in as an action
+                MoveArmForward(
+                    distance: 0.1f,
+                    speed: 0.2f,
+                    tolerance: 1e-4f,
+                    maxTimePassed: 5.0f,
+                    positionCacheSize: 10
+                );
+            }
 
-
-        if(joints[1].joint == null) {
-            throw new ArgumentException("Yo its null, please make not null");
+            if(ExtendStateFromInput(context.ReadValue<float>()) == ArmExtendState.MovingBackward)
+            {
+                //these parameters here act as if a researcher has put them in as an action
+                MoveArmBackward(
+                    distance: 0.1f,
+                    speed: 0.2f,
+                    tolerance: 1e-4f,
+                    maxTimePassed: 5.0f,
+                    positionCacheSize: 10
+                );
+            }
         }
-        TestABArmJointController joint = joints[1].joint;
-        var input = context.ReadValue<float>();
-        joint.SetArmExtendState(ExtendStateFromInput(input));
     }
-
-    public void OnMoveArmJoint2(InputAction.CallbackContext context) 
-    {
-
-
-        if(joints[2].joint == null) {
-            throw new ArgumentException("Yo its null, please make not null");
-        }
-        TestABArmJointController joint = joints[2].joint;
-        var input = context.ReadValue<float>();
-        joint.SetArmExtendState(ExtendStateFromInput(input));
-    }
-
-    public void OnMoveArmJoint3(InputAction.CallbackContext context) 
-    {
-
-
-        if(joints[3].joint == null) {
-            throw new ArgumentException("Yo its null, please make not null");
-        }
-        TestABArmJointController joint = joints[3].joint;
-        var input = context.ReadValue<float>();
-        joint.SetArmExtendState(ExtendStateFromInput(input));
-
-    }
-
-    public void OnMoveArmJoint4(InputAction.CallbackContext context) 
-    {
-
-
-        if(joints[4].joint == null) {
-            throw new ArgumentException("Yo its null, please make not null");
-        }
-        TestABArmJointController joint = joints[4].joint;
-        var input = context.ReadValue<float>();
-        joint.SetArmExtendState(ExtendStateFromInput(input));
-
-    }
-
 
     //reads input from Player Input component to extend and retract arm joint
     ArmExtendState ExtendStateFromInput (float input)

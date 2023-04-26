@@ -10682,6 +10682,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 1
+  rotateState: 0
+  liftState: 0
+  extendState: 0
   myAB: {fileID: 0}
   myABArmControllerComponent: {fileID: 0}
 --- !u!64 &5158835116365451562
@@ -10996,6 +10999,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 1
+  rotateState: 0
+  liftState: 0
+  extendState: 0
   myAB: {fileID: 0}
   myABArmControllerComponent: {fileID: 0}
 --- !u!64 &5158835116607587604
@@ -11345,6 +11351,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 1
+  rotateState: 0
+  liftState: 0
+  extendState: 0
   myAB: {fileID: 0}
   myABArmControllerComponent: {fileID: 0}
 --- !u!64 &5158835116785052164
@@ -11907,6 +11916,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 3
+  rotateState: 0
+  liftState: 0
+  extendState: 0
   myAB: {fileID: 0}
   myABArmControllerComponent: {fileID: 0}
 --- !u!1 &5158835117187801321
@@ -12680,6 +12692,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 2
+  rotateState: 0
+  liftState: 0
+  extendState: 0
   myAB: {fileID: 0}
   myABArmControllerComponent: {fileID: 0}
 --- !u!4 &5158835117633502576
@@ -13031,51 +13046,15 @@ MonoBehaviour:
     m_ActionId: bb66e4ee-14e9-4337-a9b1-1fe6eae472ce
     m_ActionName: Player/MoveArmJoint1[/Keyboard/m,/Keyboard/j]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5158835117634773016}
-        m_TargetAssemblyTypeName: TestABArmController, Assembly-CSharp
-        m_MethodName: OnMoveArmJoint2
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: 0a62c63c-a041-47e1-a9bd-d4ebadb9ae8c
     m_ActionName: Player/MoveArmJoint2[/Keyboard/comma,/Keyboard/k]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5158835117634773016}
-        m_TargetAssemblyTypeName: TestABArmController, Assembly-CSharp
-        m_MethodName: OnMoveArmJoint3
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: d93f0fc4-400c-4056-9f1f-6ae85206a4cd
     m_ActionName: Player/MoveArmJoint3[/Keyboard/period,/Keyboard/l]
   - m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 5158835117634773016}
-        m_TargetAssemblyTypeName: TestABArmController, Assembly-CSharp
-        m_MethodName: OnMoveArmJoint4
-        m_Mode: 0
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_ActionId: b4e402ea-97b2-4f38-b240-c034a55656ad
     m_ActionName: Player/MoveArmJoint4[/Keyboard/slash,/Keyboard/semicolon]
   - m_PersistentCalls:
@@ -13335,5 +13314,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   jointAxisType: 1
+  rotateState: 0
+  liftState: 0
+  extendState: 0
   myAB: {fileID: 0}
   myABArmControllerComponent: {fileID: 0}

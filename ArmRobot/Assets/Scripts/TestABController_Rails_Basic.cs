@@ -69,14 +69,14 @@ public class TestABController_Rails_Basic : MonoBehaviour
 
         else
         {
-            forcePosition = ab.worldCenterOfMass;
+            //forcePosition = ab.worldCenterOfMass;
         }
         // Debug.Log("Applying force of " + velocityChange);
 
         // change center of mass
-        ab.centerOfMass = Vector3.zero;
+        //ab.centerOfMass = Vector3.zero;
         foreach (ArticulationBody abChild in abChildren) {
-            abChild.centerOfMass = abChild.transform.InverseTransformPoint(ab.worldCenterOfMass);
+            //abChild.centerOfMass = abChild.transform.InverseTransformPoint(ab.worldCenterOfMass);
             Debug.Log(abChild.gameObject.name + "'s new centerOfMass is (" + abChild.centerOfMass.x + ", " + abChild.centerOfMass.y + ", " + abChild.centerOfMass.z + ")");
         }
 

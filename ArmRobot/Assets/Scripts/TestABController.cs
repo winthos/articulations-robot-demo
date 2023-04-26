@@ -13,9 +13,6 @@ public class TestABController : MonoBehaviour
     //use this to set global random object
     protected static System.Random systemRandom = new System.Random();
 
-    public GameObject forceTarget = null;
-    public GameObject forceTargetBack = null;
-
     public bool applyActionNoise = false;
     public float movementGaussian = 0.1f;
     public float rotateGaussian = 0.1f;
@@ -26,16 +23,13 @@ public class TestABController : MonoBehaviour
 
     [Header("Reference to this Articulation Body")]
     public ArticulationBody ab;
+    public List<ArticulationBody> abChildren = new List<ArticulationBody>();
 
     [Header("Speed for movement and rotation")]
     public float moveSpeed;
     public float rotateSpeed;
     private float move;
     private float rotate;
-
-    [Header("Colliders used when moving or rotating")]
-    public GameObject MoveColliders;
-    public GameObject RotateColliders;
 
     [Header("Debug Move and Rotate states")]
     public MoveState moveState = MoveState.Idle;
@@ -44,7 +38,19 @@ public class TestABController : MonoBehaviour
     public void Start()
     {
         print(ab.centerOfMass);
-        forceTarget.transform.localPosition = ab.centerOfMass;
+
+        //print(ab.centerOfMass);
+        
+        Debug.Log(ab.gameObject.name + "'s old centerOfMass is (" + ab.centerOfMass.x + ", " + ab.centerOfMass.y + ", " + ab.centerOfMass.z + ")");
+        
+        ab.centerOfMass = Vector3.zero + new Vector3(0,0,0);
+        Debug.Log(ab.gameObject.name + "'s new centerOfMass is (" + ab.centerOfMass.x + ", " + ab.centerOfMass.y + ", " + ab.centerOfMass.z + ")");
+
+        foreach (ArticulationBody abChild in abChildren) {
+            abChild.centerOfMass = abChild.transform.InverseTransformPoint(ab.worldCenterOfMass);
+            Debug.Log(abChild.gameObject.name + "'s new centerOfMass is (" + abChild.worldCenterOfMass.x + ", " + abChild.worldCenterOfMass.y + ", " + abChild.worldCenterOfMass.z + ")");
+        }
+        // ab.TeleportRoot(new Vector3(3.466904f, 0f, 30f), Quaternion.Euler(0, 90f, 0));
     }
 
     public void OnMove(InputAction.CallbackContext context) 
@@ -113,11 +119,9 @@ public class TestABController : MonoBehaviour
 
     private void FixedUpdate() 
     {
-        //print(ab.centerOfMass);
-
-        UpdateCollidersForMovement();
         Move();
         Rotate();
+        // baseFloorCollider.transform.eulerAngles = new Vector3(0, baseFloorCollider.transform.eulerAngles.y, 0);
     }
 
     private void Update()
@@ -128,80 +132,14 @@ public class TestABController : MonoBehaviour
         // }
     }
 
-    //this is wrong, i'm using kinematic equations assuming constant acceleration which I don't think is right actually
-    private IEnumerator MoveDistanceForward(float distance)
-    {
-        float currentTime = 0f;
-
-        //ok try to move forward <distance>
-        //use distance = ((v0 + vf)/2) * (time)
-
-        //grab target final velocity based on move speed
-        Vector3 targetVelocity = new Vector3(0, 0, 1);
-        targetVelocity *= moveSpeed;
-
-        Debug.Log($"target velocity: {targetVelocity}");
-        
-        float timeNeeded = ((2*distance)/(targetVelocity.z));
-        Debug.Log($"time needed: {timeNeeded}");
-
-        while (currentTime < timeNeeded)
-        {
-            Debug.Log(currentTime);
-
-            //now apply force of given velocity change over this amount of time???
-            Vector3 forcePosition = new Vector3();
-            forcePosition = forceTarget.transform.position;
-            GameObject targetObject = null;
-            targetObject = forceTarget;
-
-            //align direction
-            targetVelocity = targetObject.transform.TransformDirection(targetVelocity);
-
-            if(applyActionNoise && targetObject != null)
-            {
-                //this should probably change to applying a random torque rather than rotating the forward direction
-                float dirRandom = Random.Range(-movementGaussian, movementGaussian);
-                targetObject.transform.Rotate(0, dirRandom, 0);
-            }
-
-            Vector3 currentVelocity = ab.velocity;
-            Vector3 velocityChange = (targetVelocity - currentVelocity);
-
-
-            ab.AddForceAtPosition(velocityChange, forcePosition);
-
-            currentTime += Time.smoothDeltaTime;
-            yield return null;
-        }
-
-        yield return null;
-    }
-
     void Move()
     {
         if(rotateState == RotateState.Idle && moveState != MoveState.Idle)
         {
-            Vector3 forcePosition = new Vector3();
-
-            //prep to apply noise to forward direction if flagged to do so
-            GameObject targetObject = null;
-            if(moveState == MoveState.Forward)
+            //prep to apply noise to forward direction if flagged to do so            
+            if(applyActionNoise == true)
             {
-                forcePosition = forceTarget.transform.position;
-                targetObject = forceTarget;
-            }
-
-            else if(moveState == MoveState.Backward)
-            {
-                forcePosition = forceTargetBack.transform.position;
-                targetObject = forceTargetBack;
-            }
-            
-            if(applyActionNoise && targetObject != null)
-            {
-                float dirRandom = Random.Range(-movementGaussian, movementGaussian);
-                targetObject.transform.Rotate(0, dirRandom, 0);
+                // Add noise stuff here when time comes
             }
 
             //find target velocity
@@ -211,13 +149,19 @@ public class TestABController : MonoBehaviour
             targetvelocity *= moveSpeed;
 
             //allign direction
-            targetvelocity = targetObject.transform.TransformDirection(targetvelocity);
+            targetvelocity = transform.TransformDirection(targetvelocity);
 
             //calculate forces
             Vector3 velocityChange = (targetvelocity - currentVelocity); //this is F = mvt I think?
             //Debug.Log(Time.fixedDeltaTime);
 
-            ab.AddForceAtPosition(velocityChange, forcePosition);
+            // ab.centerOfMass = Vector3.zero;
+            // foreach (ArticulationBody abChild in abChildren) {
+            //     abChild.centerOfMass = abChild.transform.InverseTransformPoint(ab.worldCenterOfMass);
+            //     Debug.Log(abChild.gameObject.name + "'s new centerOfMass is (" + abChild.worldCenterOfMass.x + ", " + abChild.worldCenterOfMass.y + ", " + abChild.worldCenterOfMass.z + ")");
+            // }
+
+            ab.AddForce(velocityChange);
         }
     }
 
@@ -247,38 +191,4 @@ public class TestABController : MonoBehaviour
             }
         }
     }
-
-    public void UpdateCollidersForMovement()
-    {
-        if(MoveColliders == null)
-        {
-            return;
-        }
-
-        if(RotateColliders == null)
-        {
-            return;
-        }
-
-        //moving forward/backward
-        if((moveState == MoveState.Forward || moveState == MoveState.Backward) && rotateState == RotateState.Idle)
-        {
-            if(MoveColliders.activeSelf == false)
-            MoveColliders.SetActive(true);
-
-            if(RotateColliders.activeSelf == true)
-            RotateColliders.SetActive(false);
-        }
-
-        //rotating
-        else if ((rotateState == RotateState.Positive || rotateState == RotateState.Negative) && moveState == MoveState.Idle)
-        {
-            if(MoveColliders.activeSelf == true)
-            MoveColliders.SetActive(false);
-
-            if(RotateColliders.activeSelf == false)
-            RotateColliders.SetActive(true);
-        }
-    }
-
 }

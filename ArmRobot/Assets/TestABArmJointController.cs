@@ -107,16 +107,14 @@ public class TestABArmJointController : MonoBehaviour
                 //snapshot the initial joint position to compare with later during movement
                 currentArmMoveParams.initialJointPosition = myAB.jointPosition[0];
 
-                //set if we are moving up or down based on sign of distance from input
+                //set if we are extending or retracting
                 if(armMoveParams.direction < 0)
                 {
-                    //Debug.Log("setting extend state to retracting");
                     extendState = ArmExtendState.MovingBackward;
                 }
 
                 if(armMoveParams.direction > 0)
                 {
-                    //Debug.Log("setting extend state to extending");
                     extendState = ArmExtendState.MovingForward;
                 }
             }
@@ -129,13 +127,13 @@ public class TestABArmJointController : MonoBehaviour
                 //set current arm move params to prep for movement in fixed update
                 currentArmMoveParams = armMoveParams;
 
-                //initialize the buffer to cache positions to check for later
+                //initialize the buffer to cache rotations to check for later
                 currentArmMoveParams.cachedPositions = new float[currentArmMoveParams.positionCacheSize];
                 
-                //snapshot the initial joint position to compare with later during movement
+                //snapshot the initial joint "rotation" to compare with later during movement
                 currentArmMoveParams.initialJointPosition = myAB.jointPosition[0];
 
-                //set if we are moving up or down based on sign of distance from input
+                //set if we are rotating left or right
                 if(armMoveParams.direction < 0)
                 {
                     rotateState = ArmRotateState.Negative;
@@ -149,7 +147,11 @@ public class TestABArmJointController : MonoBehaviour
         }
     }
 
-    //this is called once every frame update
+    private void FixedUpdate()
+    { 
+        ControlJointFromAction();
+    }
+
     public void ControlJointFromAction()
     {
         //we are a lift type joint
@@ -279,6 +281,7 @@ public class TestABArmJointController : MonoBehaviour
             }
         }
 
+        //if we are a revolute joint
         else if(jointAxisType == JointAxisType.Rotate)
         {
             if(rotateState != ArmRotateState.Idle)
@@ -296,7 +299,7 @@ public class TestABArmJointController : MonoBehaviour
                 myAB.xDrive = drive;
 
                 //begin checks to see if we have stopped moving or if we need to stop moving
-                //cache the position at the moment
+                //cache the rotation at the moment
                 currentArmMoveParams.cachedPositions[currentArmMoveParams.oldestCachedIndex] = currentRotation;
 
                 var distanceMovedSoFar = Mathf.Abs(currentRotation - Mathf.Rad2Deg * currentArmMoveParams.initialJointPosition);
@@ -314,7 +317,7 @@ public class TestABArmJointController : MonoBehaviour
                     //by the {tolerance} deviation then we have presumably stopped moving
                     if(CheckArrayWithinStandardDeviation(currentArmMoveParams.cachedPositions, currentArmMoveParams.tolerance))
                     {
-                        Debug.Log($"last {currentArmMoveParams.positionCacheSize} positions were within tolerance, stop moving now!");
+                        Debug.Log($"last {currentArmMoveParams.positionCacheSize} rotations were within tolerance, stop rotating now!");
                         rotateState = ArmRotateState.Idle;
                         PretendToBeInTHOR.actionFinished(true);
                         return;
@@ -323,14 +326,14 @@ public class TestABArmJointController : MonoBehaviour
 
                 if(distanceMovedSoFar >= currentArmMoveParams.distance)
                 {
-                    Debug.Log($"distance we were trying to move was: {currentArmMoveParams.distance}");
-                    Debug.Log($"max distance exceeded, distance {myAB} moved this distance: {distanceMovedSoFar}");
+                    Debug.Log($"degrees we were trying to rotate was: {currentArmMoveParams.distance}");
+                    Debug.Log($"max degrees exceeded, {myAB} rotated {distanceMovedSoFar} degrees");
                     rotateState = ArmRotateState.Idle;
                     PretendToBeInTHOR.actionFinished(true);
                     return;
                 }
                 
-                //otherwise we have a hard timer to stop movement so we don't move forever and crash unity
+                //otherwise we have a hard timer to stop rotation so we don't rotate forever and crash unity
                 currentArmMoveParams.timePassed += Time.deltaTime;
 
                 if(currentArmMoveParams.timePassed >= currentArmMoveParams.maxTimePassed)
@@ -363,17 +366,5 @@ public class TestABArmJointController : MonoBehaviour
 
         // Check if the standard deviation of the array is within the specified range
         return arrayStdDev <= standardDeviation;
-    }
-
-    //maybe we don't need this but imma leave it here for now
-    bool CheckIfDistanceMagnitudesAreCloseToDistanceToMove(float distanceMovedSoFar, float distanceToMove, float epsilon)
-    {
-        var diff = Mathf.Abs(distanceToMove - distanceMovedSoFar);
-        return diff <= epsilon || diff <= Mathf.Max(Mathf.Abs(distanceToMove), Mathf.Abs(distanceMovedSoFar)) * epsilon;
-    }
-
-    private void FixedUpdate()
-    { 
-        ControlJointFromAction();
     }
 }

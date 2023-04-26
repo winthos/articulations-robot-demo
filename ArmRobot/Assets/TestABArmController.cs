@@ -225,6 +225,8 @@ public class TestABArmController : MonoBehaviour
     {
         bool hasEveryoneStoppedYet = false;
 
+        //keep checking if things are all idle yet
+        //all individual joints should have a max timeout so this won't hang infinitely (i hope)
         while(hasEveryoneStoppedYet == false)
         {
             yield return new WaitForFixedUpdate();
@@ -243,7 +245,7 @@ public class TestABArmController : MonoBehaviour
             }
         }
 
-        //here we do
+        //done!
         PretendToBeInTHOR.actionFinished(true);
         yield return null;
     }
@@ -297,28 +299,73 @@ public class TestABArmController : MonoBehaviour
         }
     }
 
-    public void RotateWristRight()
+    public void RotateWristRight(float distance, float speed, float tolerance, float maxTimePassed, int positionCacheSize)
     {
-
+        RotateWrist(                    
+            distance: distance,
+            speed: speed,
+            tolerance: tolerance,
+            maxTimePassed: maxTimePassed,
+            positionCacheSize: positionCacheSize,
+            direction: 1 //rotate right
+        );
     }
 
-    public void RotateWristLeft()
+    public void RotateWristLeft(float distance, float speed, float tolerance, float maxTimePassed, int positionCacheSize)
     {
-        
+        RotateWrist(                    
+            distance: distance,
+            speed: speed,
+            tolerance: tolerance,
+            maxTimePassed: maxTimePassed,
+            positionCacheSize: positionCacheSize,
+            direction: -1 //rotate left
+        );
+    }
+
+    public void RotateWrist(float distance, float speed, float tolerance, float maxTimePassed, int positionCacheSize, int direction)
+    {
+        //create a set of movement params for how we are about to rotate
+        ArmMoveParams amp = new ArmMoveParams{
+            distance = distance,
+            speed = speed,
+            tolerance = tolerance,
+            maxTimePassed = maxTimePassed,
+            positionCacheSize = positionCacheSize,
+            direction = direction 
+        };
+
+        TestABArmJointController liftJoint = joints[5].joint;
+        liftJoint.PrepToControlJointFromAction(amp);
     }
 
     public void OnMoveArmWrist(InputAction.CallbackContext context)
     {
         if(context.started == true)
         {
+            //note 1 degree is .017 ish radians, so speed is in radians/second thats why its GIGANTIC
             if(RotateStateFromInput(context.ReadValue<float>()) == ArmRotateState.Positive)
             {
-
+                //these parameters here act as if a researcher has put them in as an action
+                RotateWristRight(
+                    distance: 90f,
+                    speed: 400f,
+                    tolerance: 1e-4f,
+                    maxTimePassed: 5.0f,
+                    positionCacheSize: 10
+                );
             }
 
             if(RotateStateFromInput(context.ReadValue<float>()) == ArmRotateState.Negative)
             {
-                
+                //these parameters here act as if a researcher has put them in as an action
+                RotateWristLeft(
+                    distance: 90f,
+                    speed: 400f,
+                    tolerance: 1e-4f,
+                    maxTimePassed: 5.0f,
+                    positionCacheSize: 10
+                );
             }
         }
 

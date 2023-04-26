@@ -94,7 +94,7 @@ public class TestABArmJointController : MonoBehaviour
         }
 
         //we are an extending joint, moving along the local z axis
-        else if (jointAxisType == JointAxisType.Extend)
+        else if(jointAxisType == JointAxisType.Extend)
         {
             if(extendState == ArmExtendState.Idle)
             {
@@ -118,6 +118,32 @@ public class TestABArmJointController : MonoBehaviour
                 {
                     //Debug.Log("setting extend state to extending");
                     extendState = ArmExtendState.MovingForward;
+                }
+            }
+        }
+
+        else if(jointAxisType == JointAxisType.Rotate)
+        {
+            if(rotateState == ArmRotateState.Idle)
+            {
+                //set current arm move params to prep for movement in fixed update
+                currentArmMoveParams = armMoveParams;
+
+                //initialize the buffer to cache positions to check for later
+                currentArmMoveParams.cachedPositions = new float[currentArmMoveParams.positionCacheSize];
+                
+                //snapshot the initial joint position to compare with later during movement
+                currentArmMoveParams.initialJointPosition = myAB.jointPosition[0];
+
+                //set if we are moving up or down based on sign of distance from input
+                if(armMoveParams.direction < 0)
+                {
+                    rotateState = ArmRotateState.Negative;
+                }
+
+                if(armMoveParams.direction > 0)
+                {
+                    rotateState = ArmRotateState.Positive;
                 }
             }
         }
@@ -250,6 +276,68 @@ public class TestABArmJointController : MonoBehaviour
                     extendState = ArmExtendState.Idle;
                     return;
                 }
+            }
+        }
+
+        else if(jointAxisType == JointAxisType.Rotate)
+        {
+            if(rotateState != ArmRotateState.Idle)
+            {
+                //seems like revolute joints always only have an xDrive, and to change where its rotating
+                //you just rotate the anchor itself, but always access the xDrive
+                var drive = myAB.xDrive;
+                float currentRotationRads = myAB.jointPosition[0];
+                float currentRotation = Mathf.Rad2Deg * currentRotationRads;
+                //i think this speed is in rads per second?????
+                float targetRotation = currentRotation + (float)rotateState * currentArmMoveParams.speed * Time.fixedDeltaTime;
+                drive.target = targetRotation;
+                myAB.xDrive = drive;
+
+                //begin checks to see if we have stopped moving or if we need to stop moving
+                //cache the position at the moment
+                currentArmMoveParams.cachedPositions[currentArmMoveParams.oldestCachedIndex] = currentRotation;
+
+                var distanceMovedSoFar = Mathf.Abs(currentRotation - Mathf.Rad2Deg * currentArmMoveParams.initialJointPosition);
+
+                //iterate next index in cache, loop back to index 0 as we get newer positions
+                currentArmMoveParams.oldestCachedIndex = (currentArmMoveParams.oldestCachedIndex + 1) % currentArmMoveParams.positionCacheSize;
+
+                //every time we loop back around the cached positions, check if we effectively stopped moving
+                if(currentArmMoveParams.oldestCachedIndex == 0)
+                {
+                    //go ahead and update index 0 super quick so we don't miss it
+                    currentArmMoveParams.cachedPositions[currentArmMoveParams.oldestCachedIndex] = currentRotation;
+                    
+                    //for the last {NumberOfCachedPositions} positions, and if that amount hasn't changed
+                    //by the {tolerance} deviation then we have presumably stopped moving
+                    if(CheckArrayWithinStandardDeviation(currentArmMoveParams.cachedPositions, currentArmMoveParams.tolerance))
+                    {
+                        Debug.Log($"last {currentArmMoveParams.positionCacheSize} positions were within tolerance, stop moving now!");
+                        rotateState = ArmRotateState.Idle;
+                        PretendToBeInTHOR.actionFinished(true);
+                        return;
+                    }
+                }
+
+                if(distanceMovedSoFar >= currentArmMoveParams.distance)
+                {
+                    Debug.Log($"distance we were trying to move was: {currentArmMoveParams.distance}");
+                    Debug.Log($"max distance exceeded, distance {myAB} moved this distance: {distanceMovedSoFar}");
+                    rotateState = ArmRotateState.Idle;
+                    PretendToBeInTHOR.actionFinished(true);
+                    return;
+                }
+                
+                //otherwise we have a hard timer to stop movement so we don't move forever and crash unity
+                currentArmMoveParams.timePassed += Time.deltaTime;
+
+                if(currentArmMoveParams.timePassed >= currentArmMoveParams.maxTimePassed)
+                {
+                    Debug.Log($"{currentArmMoveParams.timePassed} seconds have passed. Time out happening, stop moving!");
+                    rotateState = ArmRotateState.Idle;
+                    PretendToBeInTHOR.actionFinished(true);
+                    return;
+                }            
             }
         }
     }

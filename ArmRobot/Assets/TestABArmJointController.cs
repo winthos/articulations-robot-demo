@@ -286,7 +286,9 @@ public class TestABArmJointController : MonoBehaviour
                 //seems like revolute joints always only have an xDrive, and to change where its rotating
                 //you just rotate the anchor itself, but always access the xDrive
                 var drive = myAB.xDrive;
+                //somehow this is already in either meters or radians, so we are in radians here
                 float currentRotationRads = myAB.jointPosition[0];
+                //convert to degrees
                 float currentRotation = Mathf.Rad2Deg * currentRotationRads;
                 //i think this speed is in rads per second?????
                 float targetRotation = currentRotation + (float)rotateState * currentArmMoveParams.speed * Time.fixedDeltaTime;
@@ -373,22 +375,5 @@ public class TestABArmJointController : MonoBehaviour
     private void FixedUpdate()
     { 
         ControlJointFromAction();
-    }
-
-    // MOVEMENT HELPERS for rotate
-
-    //get current rotation value in degrees
-    float CurrentPrimaryAxisRotation()
-    {
-        float currentRotationRads = myAB.jointPosition[0];
-        float currentRotation = Mathf.Rad2Deg * currentRotationRads;
-        return currentRotation;
-    }
-
-    void RotateTo(float primaryAxisRotation)
-    {
-        var drive = myAB.xDrive;
-        drive.target = primaryAxisRotation;
-        myAB.xDrive = drive;
     }
 }

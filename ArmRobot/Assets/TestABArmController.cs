@@ -56,7 +56,7 @@ public class TestABArmController : MonoBehaviour
     }
 
     //actually send the arm parameters to the joint moving up/down and begin movement
-    public void MoveArmBase (float distance, float speed, float tolerance, float maxTimePassed, int positionCacheSize, int direction)
+    public void MoveArmBase (float distance = 0.25f, float speed = 3.0f, float tolerance = 1e-3f, float maxTimePassed = 5.0f, int positionCacheSize = 10, int direction = 1)
     {
         //create a set of movement params for how we are about to move
         ArmMoveParams amp = new ArmMoveParams{
@@ -72,7 +72,7 @@ public class TestABArmController : MonoBehaviour
         liftJoint.PrepToControlJointFromAction(amp);
     }
 
-    //callback that runs on loop when H or N keys are pressed to lift or lower arm rig
+    //use H and N keys to raise and lower lift
     public void OnMoveArmLift(InputAction.CallbackContext context)
     {
         if(context.started == true)
@@ -81,8 +81,8 @@ public class TestABArmController : MonoBehaviour
             {
                 //these parameters here act as if a researcher has put them in as an action
                 MoveArmBaseUp(
-                    distance: 0.5f,
-                    speed: 4.0f,
+                    distance: 0.25f,
+                    speed: 3.0f,
                     tolerance: 1e-3f,
                     maxTimePassed: 5.0f,
                     positionCacheSize: 10
@@ -93,8 +93,8 @@ public class TestABArmController : MonoBehaviour
             {
                 //these parameters here act as if a researcher has put them in as an action
                 MoveArmBaseDown(
-                    distance: 0.5f,
-                    speed: 4.0f,
+                    distance: 0.25f,
+                    speed: 3.0f,
                     tolerance: 1e-3f,
                     maxTimePassed: 5.0f,
                     positionCacheSize: 10
@@ -144,7 +144,7 @@ public class TestABArmController : MonoBehaviour
         );
     }
 
-    public void ExtendArm(float distance, float speed, float tolerance, float maxTimePassed, int positionCacheSize, int direction)
+    public void ExtendArm(float distance = 0.12f, float speed = 0.2f, float tolerance = 1e-4f, float maxTimePassed = 5.0f, int positionCacheSize = 10, int direction = 1)
     {
         //get references to each joint
         TestABArmJointController joint1 = joints[1].joint;
@@ -158,8 +158,8 @@ public class TestABArmController : MonoBehaviour
                                     GetDriveUpperLimit(joint3) + 
                                     GetDriveUpperLimit(joint4);
 
-        Debug.Log($"attempting to extend arm a total of {distance}");
-        Debug.Log($"max extend distance is: {totalExtendDistance}");
+        //Debug.Log($"attempting to extend arm a total of {distance}");
+        //Debug.Log($"max extend distance is: {totalExtendDistance}");
 
         Dictionary<TestABArmJointController, float> jointToArmDistanceRatios = new Dictionary<TestABArmJointController, float>();
         Dictionary<TestABArmJointController, ArmMoveParams> jointToArmParams = new Dictionary<TestABArmJointController, ArmMoveParams>();
@@ -170,15 +170,11 @@ public class TestABArmController : MonoBehaviour
         jointToArmDistanceRatios.Add(joint3, GetDriveUpperLimit(joint3)/totalExtendDistance);
         jointToArmDistanceRatios.Add(joint4, GetDriveUpperLimit(joint4)/totalExtendDistance);
 
-        float total = 0.0f;
-
         foreach (TestABArmJointController joint in jointToArmDistanceRatios.Keys)
         {
             //assign each joint the distance it needs to move to have the entire arm try and move the total `distance`
             float myDistance = distance * jointToArmDistanceRatios[joint];
             Debug.Log($"distance for {joint} is {myDistance}");
-
-            total += myDistance;
 
             ArmMoveParams amp = new ArmMoveParams{
                 distance = myDistance,
@@ -192,7 +188,6 @@ public class TestABArmController : MonoBehaviour
             jointToArmParams.Add(joint, amp);
         }
 
-        Debug.Log($"total distance adds up to be: {total}");
         //set each joint in motion and in the fixed update we will track how much total distance has been moved
         //with each joint. If all joints's individual distances add up to the `distance` then we have reached our target extension amount
         foreach (TestABArmJointController joint in jointToArmParams.Keys)
@@ -200,8 +195,10 @@ public class TestABArmController : MonoBehaviour
             joint.PrepToControlJointFromAction(jointToArmParams[joint]);
         }
 
+        //start coroutine to check if all joints have become idle and the action is finished
     }
 
+    //helper function to return the upper limit for drives
     public float GetDriveUpperLimit(TestABArmJointController joint, JointAxisType jointAxisType = JointAxisType.Extend)
     {
         float upperLimit = 0.0f;
@@ -221,6 +218,7 @@ public class TestABArmController : MonoBehaviour
         return upperLimit;
     }
 
+    //use J and M keys to extend and retract
     public void OnMoveArmJoint1(InputAction.CallbackContext context) 
     {
         if(context.started == true)

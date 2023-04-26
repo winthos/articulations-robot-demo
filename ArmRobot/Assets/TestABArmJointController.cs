@@ -32,29 +32,14 @@ public class TestABArmJointController : MonoBehaviour
 
     [Header("State of this joint's movements")]
     [SerializeField]
-    private ArmRotateState rotateState = ArmRotateState.Idle;
+    public ArmRotateState rotateState = ArmRotateState.Idle;
     [SerializeField]
-    private ArmLiftState liftState = ArmLiftState.Idle;
+    public ArmLiftState liftState = ArmLiftState.Idle;
     [SerializeField]
-    private ArmExtendState extendState = ArmExtendState.Idle;
+    public ArmExtendState extendState = ArmExtendState.Idle;
 
     //pass in arm move parameters for Action based movement
     private ArmMoveParams currentArmMoveParams;
-
-    public void SetArmLiftState(ArmLiftState armState)
-    {
-        liftState = armState;
-    }
-
-    public void SetArmExtendState (ArmExtendState armState) 
-    {
-        extendState = armState;
-    }
-
-    public void SetArmRotateState (ArmRotateState armState)
-    {
-        rotateState = armState;
-    } 
 
     public ArticulationBody myAB;
     public TestABArmController myABArmControllerComponent;
@@ -150,7 +135,7 @@ public class TestABArmJointController : MonoBehaviour
                 //moving up/down so get the yDrive
                 var drive = myAB.yDrive;
                 float currentPosition = myAB.jointPosition[0];
-                Debug.Log($"currentPosition: {currentPosition}");
+                Debug.Log($"position of lift: {currentPosition}");
                 float targetPosition = currentPosition + (float)liftState * Time.fixedDeltaTime * currentArmMoveParams.speed;    
                 drive.target = targetPosition;
                 //this sets the drive to begin moving to the new target position
@@ -160,10 +145,7 @@ public class TestABArmJointController : MonoBehaviour
                 //cache the position at the moment
                 currentArmMoveParams.cachedPositions[currentArmMoveParams.oldestCachedIndex] = currentPosition;
 
-                //Debug.Log($"initialPosition: {currentArmMoveParams.initialJointPosition}");
-
                 var distanceMovedSoFar = Mathf.Abs(currentPosition - currentArmMoveParams.initialJointPosition);
-                //Debug.Log($"distance moved so far is: {distanceMovedSoFar}");
 
                 //iterate next index in cache, loop back to index 0 as we get newer positions
                 currentArmMoveParams.oldestCachedIndex = (currentArmMoveParams.oldestCachedIndex + 1) % currentArmMoveParams.positionCacheSize;
@@ -180,16 +162,17 @@ public class TestABArmJointController : MonoBehaviour
                     {
                         Debug.Log($"last {currentArmMoveParams.positionCacheSize} positions were within tolerance, stop moving now!");
                         liftState = ArmLiftState.Idle;
-                        //actionFinished(true) will go here
+                        PretendToBeInTHOR.actionFinished(true);
                         return;
                     }
                 }
 
                 if(distanceMovedSoFar >= currentArmMoveParams.distance)
                 {
-                    Debug.Log("we have moved to or a little beyond the distance specified to move so STOOOP");
+                    Debug.Log($"distance we were trying to move was: {currentArmMoveParams.distance}");
+                    Debug.Log($"max distance exceeded, distance {myAB} moved this distance: {distanceMovedSoFar}");
                     liftState = ArmLiftState.Idle;
-                    //actionFinished(true) will go here
+                    PretendToBeInTHOR.actionFinished(true);
                     return;
                 }
                 
@@ -200,7 +183,7 @@ public class TestABArmJointController : MonoBehaviour
                 {
                     Debug.Log($"{currentArmMoveParams.timePassed} seconds have passed. Time out happening, stop moving!");
                     liftState = ArmLiftState.Idle;
-                    //actionFinished(true) will go here
+                    PretendToBeInTHOR.actionFinished(true);
                     return;
                 }
             }
@@ -244,7 +227,7 @@ public class TestABArmJointController : MonoBehaviour
                     //by the {tolerance} deviation then we have presumably stopped moving
                     if(CheckArrayWithinStandardDeviation(currentArmMoveParams.cachedPositions, currentArmMoveParams.tolerance))
                     {
-                        Debug.Log($"tolerance reached, distance {myAB} moved so far: {distanceMovedSoFar}");
+                        Debug.Log($"tolerance reached, distance {myAB} moved this distance: {distanceMovedSoFar}");
                         extendState = ArmExtendState.Idle;
                         return;
                     }
@@ -252,7 +235,8 @@ public class TestABArmJointController : MonoBehaviour
 
                 if(distanceMovedSoFar >= currentArmMoveParams.distance)
                 {
-                    Debug.Log($"max distance exceeded, distance {myAB} moved so far: {distanceMovedSoFar}");
+                    Debug.Log($"distance we were trying to move was: {currentArmMoveParams.distance}");
+                    Debug.Log($"max distance exceeded, distance {myAB} moved this distance: {distanceMovedSoFar}");
                     extendState = ArmExtendState.Idle;
                     return;
                 }
@@ -262,7 +246,7 @@ public class TestABArmJointController : MonoBehaviour
 
                 if(currentArmMoveParams.timePassed >= currentArmMoveParams.maxTimePassed)
                 {
-                    Debug.Log($"max time passed, distance {myAB} moved so far: {distanceMovedSoFar}");
+                    Debug.Log($"max time passed, distance {myAB} moved this distance: {distanceMovedSoFar}");
                     extendState = ArmExtendState.Idle;
                     return;
                 }

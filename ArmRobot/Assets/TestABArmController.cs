@@ -6,6 +6,15 @@ using UnityEngine.InputSystem;
 
 //this tests controlling the arm parts moving with force
 public enum ABControlMode {Keyboard_Input, Actions};
+
+public static class PretendToBeInTHOR
+{
+    public static void actionFinished(bool result)
+    {
+        Debug.Log($"Action Finished: {result}!");
+    }
+}
+
 public class TestABArmController : MonoBehaviour
 {
     [SerializeField]
@@ -146,35 +155,31 @@ public class TestABArmController : MonoBehaviour
 
     public void ExtendArm(float distance = 0.12f, float speed = 0.2f, float tolerance = 1e-4f, float maxTimePassed = 5.0f, int positionCacheSize = 10, int direction = 1)
     {
-        //get references to each joint
-        TestABArmJointController joint1 = joints[1].joint;
-        TestABArmJointController joint2 = joints[2].joint;
-        TestABArmJointController joint3 = joints[3].joint;
-        TestABArmJointController joint4 = joints[4].joint;
-        //joint 5 is the wrist so don't do that here
-
-        float totalExtendDistance = GetDriveUpperLimit(joint1) + 
-                                    GetDriveUpperLimit(joint2) + 
-                                    GetDriveUpperLimit(joint3) + 
-                                    GetDriveUpperLimit(joint4);
-
-        //Debug.Log($"attempting to extend arm a total of {distance}");
-        //Debug.Log($"max extend distance is: {totalExtendDistance}");
-
         Dictionary<TestABArmJointController, float> jointToArmDistanceRatios = new Dictionary<TestABArmJointController, float>();
-        Dictionary<TestABArmJointController, ArmMoveParams> jointToArmParams = new Dictionary<TestABArmJointController, ArmMoveParams>();
 
-        //get the ratio of the total amount of movement each joint should be responsible for
-        jointToArmDistanceRatios.Add(joint1, GetDriveUpperLimit(joint1)/totalExtendDistance);
-        jointToArmDistanceRatios.Add(joint2, GetDriveUpperLimit(joint2)/totalExtendDistance);
-        jointToArmDistanceRatios.Add(joint3, GetDriveUpperLimit(joint3)/totalExtendDistance);
-        jointToArmDistanceRatios.Add(joint4, GetDriveUpperLimit(joint4)/totalExtendDistance);
+        //get the total distance each joint can move based on the upper limits
+        float totalExtendDistance = 0.0f;
 
+        //loop through all extending joints to get the total distance each joint can move
+        for(int i = 1; i <= 4; i++)
+        {
+            totalExtendDistance += GetDriveUpperLimit(joints[i].joint);
+        }
+
+        //loop through all extending joints and get the ratio of movement each joint is responsible for
+        for(int i = 1; i <= 4; i++)
+        {
+            TestABArmJointController thisJoint = joints[i].joint;
+            jointToArmDistanceRatios.Add(thisJoint, GetDriveUpperLimit(thisJoint)/totalExtendDistance);
+        }
+
+        List<TestABArmJointController> jointsThatAreMoving = new List<TestABArmJointController>();
+
+        //set each joint to move its specific distance
         foreach (TestABArmJointController joint in jointToArmDistanceRatios.Keys)
         {
-            //assign each joint the distance it needs to move to have the entire arm try and move the total `distance`
+            //assign each joint the distance it needs to move to have the entire arm
             float myDistance = distance * jointToArmDistanceRatios[joint];
-            Debug.Log($"distance for {joint} is {myDistance}");
 
             ArmMoveParams amp = new ArmMoveParams{
                 distance = myDistance,
@@ -185,17 +190,15 @@ public class TestABArmController : MonoBehaviour
                 direction = direction 
             };
 
-            jointToArmParams.Add(joint, amp);
-        }
+            //keep track of joints that are moving
+            jointsThatAreMoving.Add(joint);
 
-        //set each joint in motion and in the fixed update we will track how much total distance has been moved
-        //with each joint. If all joints's individual distances add up to the `distance` then we have reached our target extension amount
-        foreach (TestABArmJointController joint in jointToArmParams.Keys)
-        {
-            joint.PrepToControlJointFromAction(jointToArmParams[joint]);
+            //start moving this joint
+            joint.PrepToControlJointFromAction(amp);
         }
 
         //start coroutine to check if all joints have become idle and the action is finished
+        StartCoroutine(AreAllTheJointsBackToIdle(jointsThatAreMoving));
     }
 
     //helper function to return the upper limit for drives
@@ -216,6 +219,33 @@ public class TestABArmController : MonoBehaviour
         }
 
         return upperLimit;
+    }
+
+    private IEnumerator AreAllTheJointsBackToIdle(List<TestABArmJointController> jointsThatAreMoving)
+    {
+        bool hasEveryoneStoppedYet = false;
+
+        while(hasEveryoneStoppedYet == false)
+        {
+            yield return new WaitForFixedUpdate();
+
+            foreach(TestABArmJointController joint in jointsThatAreMoving)
+            {
+                if(joint.extendState == ArmExtendState.Idle)
+                {
+                    hasEveryoneStoppedYet = true;
+                }
+
+                else
+                {
+                    hasEveryoneStoppedYet = false;
+                }
+            }
+        }
+
+        //here we do
+        PretendToBeInTHOR.actionFinished(true);
+        yield return null;
     }
 
     //use J and M keys to extend and retract
@@ -267,15 +297,38 @@ public class TestABArmController : MonoBehaviour
         }
     }
 
-    public void OnMoveArmWrist(InputAction.CallbackContext context)
+    public void RotateWristRight()
+    {
+
+    }
+
+    public void RotateWristLeft()
     {
         
-        if(joints[5].joint == null) {
-            throw new ArgumentException("Yo its null, please make not null");
+    }
+
+    public void OnMoveArmWrist(InputAction.CallbackContext context)
+    {
+        if(context.started == true)
+        {
+            if(RotateStateFromInput(context.ReadValue<float>()) == ArmRotateState.Positive)
+            {
+
+            }
+
+            if(RotateStateFromInput(context.ReadValue<float>()) == ArmRotateState.Negative)
+            {
+                
+            }
         }
-        TestABArmJointController joint = joints[5].joint;
-        var input = context.ReadValue<float>();
-        joint.SetArmRotateState(RotateStateFromInput(input));
+
+
+        // if(joints[5].joint == null) {
+        //     throw new ArgumentException("Yo its null, please make not null");
+        // }
+        // TestABArmJointController joint = joints[5].joint;
+        // var input = context.ReadValue<float>();
+        //joint.SetArmRotateState(RotateStateFromInput(input));
     }
 
     //reads input from Player Input component to rotate arm joint

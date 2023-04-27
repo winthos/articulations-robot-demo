@@ -4,17 +4,6 @@ using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-//this tests controlling the arm parts moving with force
-public enum ABControlMode {Keyboard_Input, Actions};
-
-public static class PretendToBeInTHOR
-{
-    public static void actionFinished(bool result)
-    {
-        Debug.Log($"Action Finished: {result}!");
-    }
-}
-
 public class TestABArmController : MonoBehaviour
 {
     [SerializeField]
@@ -74,7 +63,7 @@ public class TestABArmController : MonoBehaviour
             tolerance = tolerance,
             maxTimePassed = maxTimePassed,
             positionCacheSize = positionCacheSize,
-            direction = direction 
+            direction = direction
         };
 
         TestABArmJointController liftJoint = joints[0].joint;

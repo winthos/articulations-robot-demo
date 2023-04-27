@@ -4,19 +4,32 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using RandomExtensions;
 
+public enum ABControlMode {Keyboard_Input, Actions};
+//this tests controlling the body moving with force
 public enum MoveState {Idle = 0, Backward = -1, Forward = 1};
-
 public enum RotateState {Idle = 0, Negative = -1, Positive = 1};
+// public class AgentParams
+// {
+//     //distance to move either in meters or radians?
+//     public float distance;
+//     public float maxVelocity;
+//     public float acceleration;
+//     public float accelerationTime;
+//     //these are used during movement in fixed update
+//     public int direction;
+//     public float timePassed = 0.0f;
+// }
+
+public static class PretendToBeInTHOR
+{
+    public static void actionFinished(bool result)
+    {
+        Debug.Log($"Action Finished: {result}!");
+    }
+}
 
 public class TestABController : MonoBehaviour
 {
-    //use this to set global random object
-    protected static System.Random systemRandom = new System.Random();
-
-    public bool applyActionNoise = false;
-    public float movementGaussian = 0.1f;
-    public float rotateGaussian = 0.1f;
-
     [SerializeField]
     [Header("Control with Keyboard or Action")]
     ABControlMode controlMode = ABControlMode.Keyboard_Input;
@@ -52,6 +65,72 @@ public class TestABController : MonoBehaviour
         }
         // ab.TeleportRoot(new Vector3(3.466904f, 0f, 30f), Quaternion.Euler(0, 90f, 0));
     }
+
+    // public void MoveForward (float distance, float speed, float tolerance, float maxTimePassed)
+    // {
+    //     Move(                    
+    //         distance: distance,
+    //         speed: speed,
+    //         tolerance: tolerance,
+    //         maxTimePassed: maxTimePassed,
+    //         direction: 1 //going up
+    //     );
+    // }
+
+    // public void MoveArmBaseDown (float distance, float speed, float tolerance, float maxTimePassed)
+    // {
+    //     Move(                    
+    //         distance: distance,
+    //         speed: speed,
+    //         tolerance: tolerance,
+    //         maxTimePassed: maxTimePassed,
+    //         direction: -1 //going down
+    //     );
+    // }
+
+    //actually send the arm parameters to the joint moving up/down and begin movement
+    // public void Move(float distance = 0.25f, float speed = 3.0f, float tolerance = 1e-3f, float maxTimePassed = 5.0f, int direction = 1)
+    // {
+    //     //create a set of movement params for how we are about to move
+    //     ArmMoveParams amp = new ArmMoveParams{
+    //         distance = distance,
+    //         speed = speed,
+    //         tolerance = tolerance,
+    //         maxTimePassed = maxTimePassed,
+    //         direction = direction 
+    //     };
+
+    //     if(Mathf.Approximately(distance, 0.0f))
+    //     {
+    //         Debug.Log("Error! distance to move must be nonzero");
+    //         return;
+    //     }
+
+    //     if(moveState == MoveState.Idle)
+    //     {
+    //         //set current arm move params to prep for movement in fixed update
+    //         currentArmMoveParas = armMoveParams;
+
+    //         //initialize the buffer to cache positions to check for later
+    //         currentArmMoveParams.cachedPositions = new float[currentArmMoveParams.positionCacheSize];
+            
+    //         //snapshot the initial joint position to compare with later during movement
+    //         currentArmMoveParams.initialJointPosition = myAB.jointPosition[0];
+
+    //         //set if we are moving up or down based on sign of distance from input
+    //         if(armMoveParams.direction < 0)
+    //         {
+    //             Debug.Log("setting lift state to move down");
+    //             liftState = ArmLiftState.MovingDown;
+    //         }
+
+    //         else if(armMoveParams.direction > 0)
+    //         {
+    //             Debug.Log("setting lift state to move up");
+    //             liftState = ArmLiftState.MovingUp;
+    //         }
+    // }
+
 
     public void OnMove(InputAction.CallbackContext context) 
     {
@@ -136,12 +215,6 @@ public class TestABController : MonoBehaviour
     {
         if(rotateState == RotateState.Idle && moveState != MoveState.Idle)
         {
-            //prep to apply noise to forward direction if flagged to do so            
-            if(applyActionNoise == true)
-            {
-                // Add noise stuff here when time comes
-            }
-
             //find target velocity
             Vector3 currentVelocity = ab.velocity;
 
@@ -169,19 +242,7 @@ public class TestABController : MonoBehaviour
     {
         if(rotateState != RotateState.Idle && moveState == MoveState.Idle)
         {
-            float rotateAmount;
-
-            if(applyActionNoise)
-            {
-                float rotRandom = Random.Range(-rotateGaussian, rotateGaussian);
-                rotateAmount = rotate + rotRandom;
-            }
-
-            else
-            {
-                rotateAmount = rotate;
-            }
-
+            float rotateAmount = rotate;
             //Debug.Log(rotateAmount);
 
             if(rotateState != RotateState.Idle && moveState == MoveState.Idle)

@@ -312,7 +312,7 @@ public class TestABArmController : MonoBehaviour
         );
     }
 
-    public void RotateWrist(float distance, float speed, float tolerance, float maxTimePassed, int positionCacheSize, int direction)
+    public void RotateWrist(float distance = 90f, float speed = 300f, float tolerance = 1e-4f, float maxTimePassed = 10.0f, int positionCacheSize = 10, int direction = 1)
     {
         //create a set of movement params for how we are about to rotate
         ArmMoveParams amp = new ArmMoveParams{
@@ -338,9 +338,9 @@ public class TestABArmController : MonoBehaviour
                 //these parameters here act as if a researcher has put them in as an action
                 RotateWristRight(
                     distance: 90f,
-                    speed: 400f,
+                    speed: 300f,
                     tolerance: 1e-4f,
-                    maxTimePassed: 5.0f,
+                    maxTimePassed: 10.0f,
                     positionCacheSize: 10
                 );
             }
@@ -350,9 +350,9 @@ public class TestABArmController : MonoBehaviour
                 //these parameters here act as if a researcher has put them in as an action
                 RotateWristLeft(
                     distance: 90f,
-                    speed: 400f,
+                    speed: 300f,
                     tolerance: 1e-4f,
-                    maxTimePassed: 5.0f,
+                    maxTimePassed: 10.0f,
                     positionCacheSize: 10
                 );
             }

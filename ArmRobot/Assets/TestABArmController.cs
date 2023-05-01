@@ -91,7 +91,7 @@ public class TestABArmController : MonoBehaviour
                 //these parameters here act as if a researcher has put them in as an action
                 MoveArmBaseUp(
                     distance: 0.25f,
-                    speed: 3.0f,
+                    speed: 1.0f,
                     tolerance: 1e-3f,
                     maxTimePassed: 5.0f,
                     positionCacheSize: 10
@@ -103,7 +103,7 @@ public class TestABArmController : MonoBehaviour
                 //these parameters here act as if a researcher has put them in as an action
                 MoveArmBaseDown(
                     distance: 0.25f,
-                    speed: 3.0f,
+                    speed: 1.0f,
                     tolerance: 1e-3f,
                     maxTimePassed: 5.0f,
                     positionCacheSize: 10

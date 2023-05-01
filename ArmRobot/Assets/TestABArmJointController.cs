@@ -44,6 +44,12 @@ public class TestABArmJointController : MonoBehaviour
     public ArticulationBody myAB;
     public TestABArmController myABArmControllerComponent;
 
+    public float lowerArmBaseLimit = -0.1832155f;
+    public float upperArmBaseLimit = 0.9177839f;
+
+    private float integral;
+    private float lastError;
+
     void Start() 
     {
         myAB = this.GetComponent<ArticulationBody>();
@@ -163,17 +169,69 @@ public class TestABArmJointController : MonoBehaviour
                 //moving up/down so get the yDrive
                 var drive = myAB.yDrive;
                 float currentPosition = myAB.jointPosition[0];
-                Debug.Log($"position of lift: {currentPosition}");
-                float targetPosition = currentPosition + (float)liftState * Time.fixedDeltaTime * currentArmMoveParams.speed;    
-                drive.target = targetPosition;
-                //this sets the drive to begin moving to the new target position
-                myAB.yDrive = drive;     
 
                 //begin checks to see if we have stopped moving or if we need to stop moving
                 //cache the position at the moment
                 currentArmMoveParams.cachedPositions[currentArmMoveParams.oldestCachedIndex] = currentPosition;
-
                 var distanceMovedSoFar = Mathf.Abs(currentPosition - currentArmMoveParams.initialJointPosition);
+
+                float distanceRemaining = currentArmMoveParams.distance - distanceMovedSoFar;
+
+                // New version of up-down drive
+                float forceAppliedFromRest = 500f;
+                float slowDownTime = 5 * Time.fixedDeltaTime;
+                drive.forceLimit = forceAppliedFromRest * 2;
+
+                float direction = (float)liftState;
+                float targetPosition = currentPosition + direction * distanceRemaining;
+
+                float offset = 1e-2f;
+                if (liftState == ArmLiftState.MovingUp) {
+                    drive.upperLimit = Mathf.Min(upperArmBaseLimit, targetPosition + offset);
+                    drive.lowerLimit = Mathf.Min(Mathf.Max(lowerArmBaseLimit, currentPosition), targetPosition);
+                } else if (liftState == ArmLiftState.MovingDown) {
+                    drive.lowerLimit = Mathf.Max(lowerArmBaseLimit, targetPosition);
+                    drive.upperLimit = Mathf.Max(Mathf.Min(upperArmBaseLimit, currentPosition + offset), targetPosition + offset);
+                }
+
+                drive.damping = forceAppliedFromRest / currentArmMoveParams.speed;
+
+                float signedDistanceRemaining = direction * distanceRemaining;
+
+                float maxSpeed = Mathf.Max(distanceRemaining / Time.fixedDeltaTime, 0f); // Never move so fast we'll overshoot in 1 step
+                currentArmMoveParams.speed = Mathf.Min(maxSpeed, currentArmMoveParams.speed);
+
+                float curVelocity = myAB.velocity.y;
+                float curSpeed = Mathf.Abs(curVelocity);
+
+                float switchWhenThisClose = 0.01f;
+                bool willReachTargetSoon = (
+                    distanceRemaining < switchWhenThisClose || (
+                        direction * curVelocity > 0f
+                        && distanceRemaining / Mathf.Max(curSpeed, 1e-7f) <= slowDownTime
+                    )
+                );
+
+                drive.target = targetPosition;
+
+                if (willReachTargetSoon) {
+                    drive.stiffness = 10000f;
+                    drive.targetVelocity = -direction * (distanceRemaining / slowDownTime);
+                } else {
+                    drive.stiffness = 0f;
+                    drive.targetVelocity = -direction * currentArmMoveParams.speed;
+                }
+
+                float curForceApplied = drive.stiffness * (targetPosition - currentPosition) + drive.damping * (drive.targetVelocity - curVelocity);
+
+                Debug.Log($"position: {currentPosition} ({targetPosition} target) ({willReachTargetSoon} near target)");
+                Debug.Log($"drive limits: {drive.lowerLimit}, {drive.upperLimit}");
+                Debug.Log($"distance moved: {distanceMovedSoFar} ({currentArmMoveParams.distance} target)");
+                Debug.Log($"velocity: {myAB.velocity.y} ({drive.targetVelocity} target)");
+                Debug.Log($"current force applied: {curForceApplied}");
+
+                //this sets the drive to begin moving to the new target position
+                myAB.yDrive = drive;
 
                 //iterate next index in cache, loop back to index 0 as we get newer positions
                 currentArmMoveParams.oldestCachedIndex = (currentArmMoveParams.oldestCachedIndex + 1) % currentArmMoveParams.positionCacheSize;
@@ -183,7 +241,7 @@ public class TestABArmJointController : MonoBehaviour
                 {
                     //go ahead and update index 0 super quick so we don't miss it
                     currentArmMoveParams.cachedPositions[currentArmMoveParams.oldestCachedIndex] = currentPosition;
-                    
+
                     //for the last {NumberOfCachedPositions} positions, and if that amount hasn't changed
                     //by the {tolerance} deviation then we have presumably stopped moving
                     if(CheckArrayWithinStandardDeviation(currentArmMoveParams.cachedPositions, currentArmMoveParams.tolerance))
@@ -194,18 +252,9 @@ public class TestABArmJointController : MonoBehaviour
                         return;
                     }
                 }
-
-                if(distanceMovedSoFar >= currentArmMoveParams.distance)
-                {
-                    Debug.Log($"distance we were trying to move was: {currentArmMoveParams.distance}");
-                    Debug.Log($"max distance exceeded, distance {myAB} moved this distance: {distanceMovedSoFar}");
-                    liftState = ArmLiftState.Idle;
-                    PretendToBeInTHOR.actionFinished(true);
-                    return;
-                }
                 
                 //otherwise we have a hard timer to stop movement so we don't move forever and crash unity
-                currentArmMoveParams.timePassed += Time.deltaTime;
+                currentArmMoveParams.timePassed += Time.fixedDeltaTime;
 
                 if(currentArmMoveParams.timePassed >= currentArmMoveParams.maxTimePassed)
                 {
@@ -214,6 +263,12 @@ public class TestABArmJointController : MonoBehaviour
                     PretendToBeInTHOR.actionFinished(true);
                     return;
                 }
+            } else {
+                var drive = myAB.yDrive;
+                drive.targetVelocity = 0.0f;
+                drive.stiffness = 0f;
+                drive.damping = 9000f;
+                myAB.yDrive = drive;
             }
 
             //we are set to be in an idle state so return and do nothing
